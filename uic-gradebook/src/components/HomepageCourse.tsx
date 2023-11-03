@@ -1,0 +1,1 @@
+// the component for the pie chart and basic info of the course to be rendered in the homepage

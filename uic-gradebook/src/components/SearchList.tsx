@@ -1,0 +1,1 @@
+// good for both the course search and frineds search

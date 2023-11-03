@@ -1,0 +1,1 @@
+// once you click on a course either in the homepage or in the search page, this component will be rendered

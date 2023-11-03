@@ -1,0 +1,1 @@
+// to display courses' search results
