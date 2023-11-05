@@ -16,7 +16,7 @@ interface Class {
     name: string;
     teacher: string;
     semester: string;
-    distribtuion: Distribution;
+    distribtuion?: Distribution;
 }
 
 interface Distribution {

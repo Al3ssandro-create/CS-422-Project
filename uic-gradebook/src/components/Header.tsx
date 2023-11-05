@@ -2,7 +2,9 @@
 
 function Header() {
     return (<>
-        <h1>Header</h1>
+    <div style={{minHeight: "10vh"}}>
+        <h1 style={{textAlign: "center"}}>Header</h1>
+        </div>
     </>)
 }
 

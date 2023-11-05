@@ -12,6 +12,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <Header />
+      <div style={{minHeight: "85vh"}}>
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="course" element={<Course />} />
@@ -19,6 +20,7 @@ const App: React.FC = () => {
         <Route path="profile" element={<Profile />} />
         <Route path="searchcourse" element={<SearchCourse />} />
       </Routes>
+      </div>
       <Navbar />
     </Router>
   );
