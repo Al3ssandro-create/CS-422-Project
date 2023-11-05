@@ -1,5 +1,3 @@
-// to display courses' search results
-
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { useNavigate } from "react-router-dom";
 
