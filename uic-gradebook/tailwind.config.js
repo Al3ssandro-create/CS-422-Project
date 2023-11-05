@@ -8,7 +8,11 @@ module.exports = {
         "./src/**/*.{html,js,tsx,ts}",
     ],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                red: '#9E2D32',
+            }
+        },
     },
     darkMode: "class",
     plugins: [nextui()],
