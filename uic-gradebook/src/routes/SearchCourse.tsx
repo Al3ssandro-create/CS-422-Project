@@ -1,7 +1,13 @@
-function SearchCourse() {
+import React from "react";
+import SearchList from "../components/SearchList";
+import Box from "../components/Box";
+
+function SearchCourse() { 
     return (
       <>
-        <h1>SearchCourse</h1>
+      <Box>
+        <SearchList/>
+        </Box>
       </>
     );
   }

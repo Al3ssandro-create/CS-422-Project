@@ -7,6 +7,7 @@ import styled from 'styled-components';
 export default function Header() {
 const StyledNavBar = styled(Navbar)`
   background-color: #9E2D32;
+  min-height: 10vh;
 `;
   const navigate = useNavigate();
   return (
