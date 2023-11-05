@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { flexRow } from "../styles/styles";
+import { flexRow, stickyFooter } from "../styles/styles";
 import { FriendsIcon } from "../icons/FriendsIcon";
 import { HomeIcon } from "../icons/HomeIcon";
 import { SearchIcon } from "../icons/SearchIcon";
@@ -10,7 +10,7 @@ import { UserIcon } from "../icons/UserIcon";
 function Navbar() {
   return (
     <>
-      <div style={flexRow}>
+      <div style={{...flexRow, ...stickyFooter}}>
         <NavLink to="/friends">
           <FriendsIcon />
         </NavLink>

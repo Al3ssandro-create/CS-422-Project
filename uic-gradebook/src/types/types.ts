@@ -16,7 +16,7 @@ export interface Class {
     name: string;
     teacher: string;
     semester: string;
-    distribtuion?: Distribution;
+    distribution?: Distribution;
 }
 
 export interface Distribution {

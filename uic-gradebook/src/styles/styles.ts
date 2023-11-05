@@ -16,5 +16,11 @@ export const flexRow: CSSProperties = {
   flexWrap: "nowrap",
   flexDirection: "row", 
   alignItems: "center",
-  minHeight: "5vh"
+  minHeight: "5vh",
+  backgroundColor: "#9E2D32"
+};
+export const stickyFooter: CSSProperties = {
+  position: "fixed",
+  bottom: "0",
+  width: "100%",
 };

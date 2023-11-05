@@ -2,6 +2,7 @@ import React from 'react';
 import  CourseCard  from "../components/CourseCard";
 import { Class } from "../types/types";
 import Box from "../components/Box";
+import SingleCourse from '../components/SingleCourse';
 function Course() {
   const courses: Class[] = [
     {
@@ -49,7 +50,7 @@ function Course() {
     <>
         <div style={{width: "100%", backgroundColor: "white"}}>
           <Box>
-            {courses.map(course => <CourseCard key={course.id} course={course} />)}
+            {courses.map(course => <SingleCourse key={course.id} course={course} />)}
           </Box>
         </div>
     </>

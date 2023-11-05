@@ -7,7 +7,7 @@ interface CourseCardProps {
   course: Class;
   userGrade?: string;
 }
-function BarChart({ distribution }: { distribution: Distribution }) {
+function BarChart({ distribution }: { distribution: Distribution | undefined }) {
     const color = ["#2CE574", "#CDF03A", "#FFE500", "#FF9600", "#FF3924"];
     const data = Object.entries(distribution).map(([grade, count]) => ({ grade, count }));
     const margin = { top: 20, right: 20, bottom: 30, left: 40 };
