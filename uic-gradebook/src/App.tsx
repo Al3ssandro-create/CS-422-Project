@@ -15,7 +15,7 @@ const App: React.FC = () => {
       <div style={{minHeight: "85vh"}}>
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="course" element={<Course />} />
+        <Route path="course/:courseId" element={<Course />} />
         <Route path="friends" element={<Friends />} />
         <Route path="profile" element={<Profile />} />
         <Route path="searchcourse" element={<SearchCourse />} />

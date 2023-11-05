@@ -11,7 +11,7 @@ function Navbar() {
   return (
     <>
       <div style={flexRow}>
-        <NavLink to="/friends" end>
+        <NavLink to="/friends">
           <FriendsIcon />
         </NavLink>
         <NavLink to="/">
