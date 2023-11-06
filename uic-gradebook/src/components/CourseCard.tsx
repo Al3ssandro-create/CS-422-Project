@@ -12,7 +12,7 @@ function CourseCard({ course }: { course: Class }) {
           navigate(`/course/${course.name}`);
         }}
       >
-        <Card shadow="lg" style={{ marginTop: "1%", marginBottom: "1%" }}>
+        <Card shadow="lg" style={{ marginTop: "1%", marginBottom: "1%" }} fullWidth>
           <CardHeader>
             <p>{course.name}</p>
           </CardHeader>
