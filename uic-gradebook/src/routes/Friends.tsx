@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
-import {  users } from "../components/Friends/constants";
-import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
-import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import PersonIcon from "@mui/icons-material/Person";
+import { users } from "../components/Friends/constants";
+import {
+  XCircleIcon,
+  PersonIcon,
+  CheckCircleIcon,
+} from "@primer/octicons-react";
 import Box from "../components/Box";
-import {Button} from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 
 function Friends() {
-  const [searchString, setSearchString] = useState('');
+  const [searchString, setSearchString] = useState("");
   const [usersToShow, setUsersToShow] = useState(users);
   const [isReqFilter, setIsReqFilter] = useState(false);
   const [allUsers, setAllUsers] = useState(users);
@@ -16,40 +18,36 @@ function Friends() {
   const getCurrentUsers = () => {
     if (isReqFilter) {
       return allUsers.filter(
-        (user) => user.status === 'pending' || user.status === 'send',
+        (user) => user.status === "pending" || user.status === "send"
       );
     } else {
-      if(searchString){
-        return allUsers.filter(
-          (user) => !user?.status,
-        );
+      if (searchString) {
+        return allUsers.filter((user) => !user?.status);
       }
-      return allUsers.filter(
-        (user) => user.status==='accepted',
-      );
+      return allUsers.filter((user) => user.status === "accepted");
     }
   };
 
   useEffect(() => {
-    setSearchString('');
+    setSearchString("");
     setUsersToShow(getCurrentUsers());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReqFilter, allUsers]);
 
   const onLinkReqClick = (i: number, isAccept: boolean) => {
     const user = usersToShow[i];
-    if (isAccept) user.status = 'accepted';
+    if (isAccept) user.status = "accepted";
     else delete user.status;
     const usrs = allUsers.map((tempUser) =>
-      tempUser.id === user.id ? user : tempUser,
+      tempUser.id === user.id ? user : tempUser
     );
     setAllUsers(usrs);
   };
   const onClick = (i: number) => {
     const user = usersToShow[i];
-    user.status = 'send';
+    user.status = "send";
     const usrs = allUsers.map((tempUser) =>
-      tempUser.id === user.id ? user : tempUser,
+      tempUser.id === user.id ? user : tempUser
     );
     setAllUsers(usrs);
   };
@@ -59,44 +57,51 @@ function Friends() {
     const newUsers = filteredUsers.filter((user) =>
       (user.name + user.surname)
         .toLowerCase()
-        .includes(searchString.toLowerCase()),
+        .includes(searchString.toLowerCase())
     );
     setUsersToShow(newUsers);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString]);
 
   return (
     <Box>
-      <div>
+      <div style={{ marginTop: "4%", marginBottom: "4%", width: "100%" }}>
         <SearchBar
           searchString={searchString}
           setSearchString={setSearchString}
         />
       </div>
-      {!isReqFilter&&<Button style={{margin:'1rem'}} onClick={()=>{
-   
-          setIsReqFilter(true);
-
-      }}>Requests</Button>}
-      <div style={{ overflow: 'auto', height: '430px' }}>
+      <Box>
+      {!isReqFilter && (
+        <Button
+        fullWidth
+          style={{ margin: "1rem", fontWeight: "bold"}}
+          onClick={() => {
+            setIsReqFilter(true);
+          }}
+        >
+          Requests
+        </Button>
+      )}
+      <div style={{ overflow: "auto", height: "430px", width: "100%" }}>
         {usersToShow.map((user, i) => {
           return (
             <div
               style={{
-                'border-radius': '20px',
-                marginTop: '1rem',
-                padding: '1rem',
-                background: '#f3f3f3',
-                display: 'flex',
-                justifyContent: 'space-between',
-                placeItems: 'center',
-                'box-shadow': '0 2px 4px 0 rgba(0, 0, 0, 0.2)',
+                borderRadius: "20px",
+                marginTop: "1rem",
+                padding: "1rem",
+                background: "#f3f3f3",
+                display: "flex",
+                justifyContent: "space-between",
+                placeItems: "center",
+                boxShadow: "0 2px 4px 0 rgba(0, 0, 0, 0.2)",
               }}
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
-                <PersonIcon />
-                <span style={{ marginLeft: '1rem' }}>
-                  {user.name + ' ' + user.surname}
+              <span style={{ display: "flex", alignItems: "center" }}>
+                <PersonIcon size={24}/>
+                <span style={{ marginLeft: "1rem" }}>
+                  {user.name + " " + user.surname}
                 </span>
               </span>
               {!isReqFilter ? (
@@ -104,9 +109,9 @@ function Friends() {
                   <Button
                     onClick={() => onClick(i)}
                     style={{
-                      backgroundColor: '#2c2c44',
-                      textTransform: 'none',
-                      color:"white"
+                      backgroundColor: "#2c2c44",
+                      textTransform: "none",
+                      color: "white",
                     }}
                     disableRipple
                   >
@@ -115,23 +120,23 @@ function Friends() {
                 ) : (
                   <></>
                 )
-              ) : user?.status === 'pending' ? (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+              ) : user?.status === "pending" ? (
+                <div style={{ display: "flex", alignItems: "center" }}>
                   <span
                     onClick={() => onLinkReqClick(i, false)}
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      marginRight: '20px',
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "20px",
                     }}
                   >
-                    <CancelOutlinedIcon />
+                    <XCircleIcon />
                   </span>
                   <span
                     onClick={() => onLinkReqClick(i, true)}
-                    style={{ display: 'flex', alignItems: 'center' }}
+                    style={{ display: "flex", alignItems: "center" }}
                   >
-                    <CheckCircleOutlinedIcon />
+                    <CheckCircleIcon />
                   </span>
                 </div>
               ) : (
@@ -141,6 +146,7 @@ function Friends() {
           );
         })}
       </div>
+      </Box>
     </Box>
     // </div>
   );

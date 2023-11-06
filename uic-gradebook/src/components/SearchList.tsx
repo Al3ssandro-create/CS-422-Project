@@ -74,7 +74,7 @@ function SearchList() {
           fullWidth
           radius="full"
           placeholder="The course or teacher"
-          startContent={<SearchIcon />}
+          startContent={<SearchIcon size={24}/>}
           value={search}
           onChange={(e) => {
             setId(searchId + 1);

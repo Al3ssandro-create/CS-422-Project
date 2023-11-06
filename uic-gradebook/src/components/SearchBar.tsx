@@ -1,6 +1,7 @@
-import { InputAdornment} from "@mui/material";
-import Input from "@mui/material/Input";
-import PersonIcon from "@mui/icons-material/Person";
+import { Input } from "@nextui-org/react";
+import {
+  PersonIcon,
+} from "@primer/octicons-react";
 
 
 const SearchBar = ({
@@ -11,27 +12,17 @@ const SearchBar = ({
   setSearchString: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
-    <div>
       <Input
-        onChange={(e) => {
-          setSearchString(e.target.value);
-        }}
-        placeholder="Search Users"
-        type="text"
-        defaultValue={searchString}
-        value={searchString}
-        fullWidth
-        startAdornment={
-          <InputAdornment position="start">
-            <PersonIcon />
-          </InputAdornment>
-        }
-        sx={{
-          '& .MuiInput-underline:before': { borderBottomColor: 'orange' },
-          '& .MuiInput-underline:after': { borderBottomColor: 'orange' },
-        }}
-      />
-    </div>
+          type="text"
+          fullWidth
+          radius="full"
+          placeholder="Your friends"
+          startContent={<PersonIcon size={24}/>}
+          value={searchString}
+          onChange={(e) => {
+            setSearchString(e.target.value.trimStart());
+          }}
+        />
   );
 };
 
