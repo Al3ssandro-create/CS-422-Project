@@ -1,8 +1,6 @@
 import React from "react";
 import { Button, Image } from "@nextui-org/react";
-import { flexCenter } from "../styles/styles";
 import Box from "../components/Box";
-// import { Button } from "@nextui-org/button";
 
 const ProfilePage = () => {
   const profileData = {

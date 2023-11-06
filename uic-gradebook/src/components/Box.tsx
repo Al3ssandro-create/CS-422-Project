@@ -3,7 +3,7 @@ import { flexCenter } from '../styles/styles';
 
 interface BoxProps {
   children: ReactNode;
-  style: CSSProperties;
+  style?: CSSProperties;
 }
 
 // commong style for padding and margins

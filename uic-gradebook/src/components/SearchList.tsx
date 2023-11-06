@@ -3,6 +3,7 @@ import { Input } from "@nextui-org/react";
 import Box from "./Box";
 import CourseCard from "./CourseCard";
 import { SearchIcon } from "../icons/SearchIcon";
+import { Class } from "../types/types";
 
 const res = [
   {
