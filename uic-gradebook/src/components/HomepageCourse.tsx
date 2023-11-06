@@ -70,7 +70,7 @@ function D3PieChart({ data }: { data: Array<number> }) {
       })
       .on("mouseout", (d) => {
         tooltip.transition().duration(500).style("opacity", 0);
-      });
+            });
 
     // const legend = svg
     //   .append("g")

@@ -1,5 +1,3 @@
-import React from 'react';
-import  CourseCard  from "../components/CourseCard";
 import { Class } from "../types/types";
 import Box from "../components/Box";
 import SingleCourse from '../components/SingleCourse';
@@ -19,7 +17,7 @@ function Course() {
         }
     },
     {
-      id: 1,
+      id: 2,
       name: 'CS 450',
       teacher: 'John Doe',
       semester: 'Spring 2023',
@@ -32,7 +30,7 @@ function Course() {
       }
   },
   {
-    id: 1,
+    id: 3,
     name: 'CS 450',
     teacher: 'John Doe',
     semester: 'Fall 2022',

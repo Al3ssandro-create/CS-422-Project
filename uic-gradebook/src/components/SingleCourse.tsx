@@ -17,7 +17,7 @@ function BarChart({ distribution }: { distribution: Distribution | undefined }) 
     const xScale = d3.scaleBand().domain(data.map(d => d.grade)).range([0, width]).padding(0.1);
     const yScale = d3.scaleLinear().domain([0, d3.max(data, d => d.count) || 0]).range([height, 0]);
 
-    const xAxis = d3.axisBottom(xScale).ticks(data.length);
+    const xAxis = d3.axisBottom(xScale).tickFormat(d => d.toUpperCase()).ticks(data.length);
     const yAxis = d3.axisLeft(yScale).ticks(5);
 
     return (
@@ -49,7 +49,7 @@ function SingleCourse({ course, userGrade }: CourseCardProps) {
     };
   
     return (
-      <Card className="py-4" style={{marginRight: "20%", marginLeft: "20%", marginBottom: "3%",}}>
+      <Card className="py-4" style={{marginRight: "20%", marginLeft: "20%", marginBottom: "1.5%",marginTop: "1.5%"}}>
           <CardHeader className="pb-0 pt-2 px-4 flex items-center justify-between">
               <div></div>
               <h3 style={{fontSize:"3.5vw"}}>{course.semester} {course.name}</h3>
