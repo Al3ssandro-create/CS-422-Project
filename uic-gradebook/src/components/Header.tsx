@@ -1,78 +1,38 @@
-// // the gradebook logo goes in here and then for those sitatuions also the back button
+import { Navbar, NavbarContent } from "@nextui-org/react";
+import { FaAngleLeft } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import "../styles/css/header.css";
+import styled from "styled-components";
+export default function Header() {
+  const location = useLocation();
+  const StyledNavBar = styled(Navbar)`
+    background-color: #9e2d32;
+    min-height: 10vh;
+    width: 100%;`
+  ;
 
-// function Header() {
-//     return (<>
-//         <h1>Header</h1>
-//     </>)
-// }
-
-// export default Header;
-
-// import React from 'react';
-
-// const TopHeader: React.FC = () => {
-//   const goBack = () => {
-//     window.history.back(); // Go back in the browser's history
-//   };
-
-//   return (
-//     <div className="header">
-//       <button className="back-button" onClick={goBack}>Back</button>
-//     </div>
-//   );
-// };
-
-// export default TopHeader;
-
-import React from 'react';
-import { Link } from 'react-router-dom'; // Assuming you're using React Router
-import myImage from '../Logo/logo.png';
-
-const TopHeader: React.FC = () => {
-  const headerStyle: React.CSSProperties = {
-    backgroundColor: '#9E2D32',
-    color: 'white',
-    display: 'flex',
-    alignItems: 'center',
-    position: 'sticky',
-    height: '100px',
-    top: 0,
-    zIndex: 100,
-  };
-
-  const imageStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    height: '50px',
-    width: 'auto',
-    margin: '0 auto',
-  };
-
-  const buttonStyle = {
-    backgroundColor: '#9E2D32',
-    color: 'white',
-    fontSize: '30px',
-  };
-
+  const navigate = useNavigate();
   return (
-    <div className="header" style={headerStyle}>
-      <div>
-        <button
-          className="back-button"
-          style={buttonStyle}
-          onClick={() => window.history.back()}
-        >
-          {'<'}
-        </button>
+    <StyledNavBar>
+      <div
+        style={{
+          backgroundImage: 'url("/src/icons/logo.svg")',
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "100%", // You need to specify a height for the background image to show
+          width: "100%", // And a width as well
+        }}
+      >
+        <NavbarContent>
+          {location.pathname !== "/" && (
+              <div onClick={() => navigate(-1)}>
+                <FaAngleLeft color="white" />   
+              </div>
+            )}
+        </NavbarContent>
       </div>
-
-      <div style={imageStyle}>
-        <Link to="/" className="logo-button">
-          <img src={myImage} alt="Logo" />
-        </Link>
-      </div>
-    </div>
+    </StyledNavBar>
   );
-};
+}
 
-export default TopHeader;

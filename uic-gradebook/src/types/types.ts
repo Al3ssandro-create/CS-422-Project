@@ -1,4 +1,4 @@
-interface User {
+export interface User {
     id: string;
     name: string;
     surname: string;
@@ -7,19 +7,19 @@ interface User {
     favClasses: Class[];   
 }
 
-interface Friend extends User {
+export interface Friend extends User {
     status: "pending" | "accepted" | "send"
 }
 
-interface Class {
+export interface Class {
     id: number;
     name: string;
     teacher: string;
     semester: string;
-    distribtuion: Distribution;
+    distribution?: Distribution;
 }
 
-interface Distribution {
+export interface Distribution {
     a: number;
     b: number;
     c: number;
