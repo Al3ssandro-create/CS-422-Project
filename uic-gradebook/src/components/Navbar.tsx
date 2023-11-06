@@ -1,27 +1,42 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useMatch } from "react-router-dom";
 import { flexRow, stickyFooter } from "../styles/styles";
-import { FriendsIcon } from "../icons/FriendsIcon";
-import { HomeIcon } from "../icons/HomeIcon";
-import { SearchIcon } from "../icons/SearchIcon";
-import { UserIcon } from "../icons/UserIcon";
+import {
+  HomeIcon,
+  HomeFillIcon,
+  PersonIcon,
+  PersonFillIcon
+} from "@primer/octicons-react";
+import { BiSearchAlt, BiSearch, BiSolidGroup, BiGroup } from "react-icons/bi";
 
 // contains all the icons to deal with navigation, the route must be used properly
 
 function Navbar() {
   return (
     <>
-      <div style={{...flexRow, ...stickyFooter}}>
+      <div style={{ ...flexRow, ...stickyFooter }}>
         <NavLink to="/friends">
-          <FriendsIcon />
+          {useMatch("/friends") ? (
+            <BiSolidGroup size={32} />
+          ) : (
+            <BiGroup size={32} />
+          )}
         </NavLink>
         <NavLink to="/">
-          <HomeIcon />
+          {useMatch("/") ? <HomeFillIcon size={32} /> : <HomeIcon size={32} />}
         </NavLink>
         <NavLink to="/searchcourse">
-          <SearchIcon />
+        {useMatch("/searchcourse") ? (
+            <BiSearchAlt size={32} />
+        ) : (
+            <BiSearch size={32} />
+          )}
         </NavLink>
         <NavLink to="/profile">
-          <UserIcon />
+          {useMatch("/profile") ? (
+            <PersonFillIcon size={32} />
+          ) : (
+            <PersonIcon size={32} />
+          )}
         </NavLink>
       </div>
     </>

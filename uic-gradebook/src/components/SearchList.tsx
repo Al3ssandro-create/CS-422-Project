@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Input } from "@nextui-org/react";
 import Box from "./Box";
 import CourseCard from "./CourseCard";
-import { SearchIcon } from "../icons/SearchIcon";
+import { SearchIcon } from "@primer/octicons-react";
+import { Class } from "../types/types";
 
 const res = [
   {
@@ -67,7 +68,7 @@ function SearchList() {
 
   return (
     <>
-      <div style={{ marginTop: "1%", marginBottom: "1%" }}>
+      <div style={{ marginTop: "4%", marginBottom: "4%", width: "100%" }}>
         <Input
           type="text"
           fullWidth
@@ -83,7 +84,7 @@ function SearchList() {
       </div>
       <Box>
         {results.map((course: Class) => (
-          <div key={course.name}>
+          <div key={course.name} style={{width: "100%"}}>
             <CourseCard course={course} />
           </div>
         ))}

@@ -1,5 +1,6 @@
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { useNavigate } from "react-router-dom";
+import { Class } from "../types/types";
 
 function CourseCard({ course }: { course: Class }) {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ function CourseCard({ course }: { course: Class }) {
           navigate(`/course/${course.name}`);
         }}
       >
-        <Card shadow="lg" style={{ marginTop: "1%", marginBottom: "1%" }}>
+        <Card shadow="lg" style={{ marginTop: "1%", marginBottom: "1%" }} fullWidth>
           <CardHeader>
             <p>{course.name}</p>
           </CardHeader>

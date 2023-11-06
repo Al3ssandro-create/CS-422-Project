@@ -6,7 +6,8 @@ export const flexCenter: CSSProperties = {
     paddingLeft: "10%",
     paddingRight: "10%",
     flexDirection: "column",
-    alignItems: "stretch"
+    alignItems: "center",
+    width: "100%",
   };
 
 export const flexRow: CSSProperties = {
