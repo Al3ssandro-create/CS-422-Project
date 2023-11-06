@@ -52,22 +52,21 @@ const ProfilePage = () => {
         }}
       >
         <div className="profile-info">
-          <Box style={{alignItems: "center"}}>
-            
-              <Image
-                src={profileData.profilePicture}
-                width={150}
-                height={150}
-                alt="Profile Picture"
-              />
-            
+          <Box style={{ alignItems: "center" }}>
+            <Image
+              src={profileData.profilePicture}
+              width={150}
+              height={150}
+              alt="Profile Picture"
+            />
+
             <div
               style={{
                 color: "black",
                 textAlign: "center",
                 display: "flex",
                 flexDirection: "column",
-                paddingTop: "4%"
+                paddingTop: "4%",
               }}
             >
               <h1>{profileData.name}</h1>
