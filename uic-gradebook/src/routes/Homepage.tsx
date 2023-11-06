@@ -4,7 +4,7 @@ import { Class } from "../types/types";
 import Box from "../components/Box";
 import {useNavigate } from "react-router-dom";
 import "../styles/css/card-course.css";
-const list: Array<Class> = [
+const list: Class[] = [
   {
     id: 1,
     name: 'CS 450',
@@ -33,10 +33,10 @@ function Homepage() {
   const navigate = useNavigate();
     return (
       <>
-      <div style={{width:"100%", backgroundColor:"white"}}>
+      <div style={{width:"100%", backgroundColor:"white", marginTop: "4%", marginBottom: "4%"}}>
         <Box> 
       {list.map((item, index) => (
-        <div onClick={() => navigate(`course/${item.name}`)} key={index}>
+        <div onClick={() => navigate(`course/${item.name}`)} key={index} style={{width: "100%"}}>
           <HomepageCourse data={Object.values(item.distribution)} name={item.name} teacher={item.teacher} semester={item.semester} />
         </div>
       ))}

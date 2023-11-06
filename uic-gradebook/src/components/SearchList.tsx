@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@nextui-org/react";
 import Box from "./Box";
 import CourseCard from "./CourseCard";
-import { SearchIcon } from "../icons/SearchIcon";
+import { SearchIcon } from "@primer/octicons-react";
 import { Class } from "../types/types";
 
 const res = [

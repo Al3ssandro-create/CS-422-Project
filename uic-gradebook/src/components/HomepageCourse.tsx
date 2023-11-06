@@ -1,6 +1,5 @@
 import { Card } from "@nextui-org/react";
 import { select, pie, arc, PieArcDatum } from "d3";
-import * as d3 from "d3";
 import { useEffect, useRef } from "react";
 function D3PieChart({ data }: { data: Array<number> }) {
   const ref = useRef(null);

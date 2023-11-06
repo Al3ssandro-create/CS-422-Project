@@ -24,9 +24,7 @@ const ProfilePage = () => {
 
   const containerStyle = {
     display: "flex",
-    // alignitems: 'flex-start',
     justifyContent: "center",
-    // alignItems: 'center',
     paddingTop: "100px",
     height: "100vw", // to center vertically within the viewport
     width: "100vw", // to cover the entire width of the page
