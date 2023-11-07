@@ -84,5 +84,32 @@
                 "status": "accepted"
             }
         ]
+    },
+    {
+        "id": 5,
+        "name": "Eve",
+        "surname": "Jackson",
+        "email": "eve.jackson@example.com",
+        "gpa": 3.7,
+        "favClasses": [],
+        "friends": []
+    },
+    {
+        "id": 6,
+        "name": "Frank",
+        "surname": "Adams",
+        "email": "frank.adams@example.com",
+        "gpa": 3.2,
+        "favClasses": [],
+        "friends": []
+    },
+    {
+        "id": 7,
+        "name": "George",
+        "surname": "Washington",
+        "email": "george.washington@example.com",
+        "gpa": 4,
+        "favClasses": [],
+        "friends": []
     }
 ]

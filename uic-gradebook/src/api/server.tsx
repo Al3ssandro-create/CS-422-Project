@@ -40,8 +40,6 @@ const getUsers = async (): Promise<User[]> => {
   if (user === null) {
     localStorage.setItem("users", JSON.stringify(_users));
 
-    console.log(_users);
-
     return transformAndValidateUsers(_users);
   }
 
@@ -71,8 +69,6 @@ export const getFavCourses = async (userId: number) => {
   if (user === undefined) return [];
 
   const classes = await getClasses();
-
-  console.log(user.favClasses);
 
   return classes.filter((course) => user.favClasses.includes(course.id));
 };
@@ -107,10 +103,13 @@ export const getFriends = async (userId: number): Promise<DisplayFriend[]> => {
   const friends = users.filter((friend) => friends_id.includes(friend.id));
 
   return friends.map((friend) => {
-    const status = user.friends.find((f) => f.id === friend.id)?.status;
+    let status = user.friends.find((f) => f.id === friend.id)?.status;
+
+    if (status === undefined) status = "pending"
+    
     return {
       ...friend,
-      status: status === undefined ? "pending" : status,
+      status,
     };
   });
 };
@@ -140,6 +139,7 @@ export const addFriend = async (userId: number, friendId: number) => {
   if (user === undefined || friend === undefined) return;
 
   user.friends.push({ id: friendId, status: "pending" });
+  friend.friends.push({ id: userId, status: "pending" });
 
-  localStorage.setItem("users", JSON.stringify(users));
+  localStorage.setItem("users", JSON.stringify({...users, user, friend}));
 };

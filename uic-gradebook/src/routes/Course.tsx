@@ -1,49 +1,18 @@
 import { Class } from "../types/types";
 import Box from "../components/Box";
 import SingleCourse from '../components/SingleCourse';
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getSearchCourses } from "../api/server";
+
 function Course() {
-  const courses: Class[] = [
-    {
-        id: 1,
-        name: 'CS 450',
-        teacher: 'John Doe',
-        semester: 'Fall 2023',
-        distribution: {
-            a: 10,
-            b: 20,
-            c: 30,
-            d: 20,
-            f: 20
-        }
-    },
-    {
-      id: 2,
-      name: 'CS 450',
-      teacher: 'John Doe',
-      semester: 'Spring 2023',
-      distribution: {
-          a: 10,
-          b: 20,
-          c: 30,
-          d: 20,
-          f: 20
-      }
-  },
-  {
-    id: 3,
-    name: 'CS 450',
-    teacher: 'John Doe',
-    semester: 'Fall 2022',
-    distribution: {
-        a: 10,
-        b: 20,
-        c: 30,
-        d: 20,
-        f: 20
-    }
-},
-    // Add more courses here...
-];
+  const [courses, setCourses] = useState<Class[]>([]);
+  const { courseName } = useParams();
+
+  useEffect(() => {
+    getSearchCourses(courseName as string, 0).then((courses) => setCourses(courses.res));
+  }, [])
+
   return (
     <>
         <div style={{width: "100%", backgroundColor: "white"}}>
