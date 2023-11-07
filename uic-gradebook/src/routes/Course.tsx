@@ -25,7 +25,7 @@ function Course() {
   return (
     <>
       <div style={{ width: "100%", backgroundColor: "white" }}>
-        <Box>
+        <Box style={{marginTop: "4%"}}>
           {courses.map((course) => (
             <SingleCourse
               key={course.id + course.semester}

@@ -58,7 +58,7 @@ function SingleCourse({ course, userGrade, fav }: CourseCardProps) {
     };
   
     return (
-      <Card className="py-4" style={{marginRight: "20%", marginLeft: "20%", marginBottom: "1.5%",marginTop: "1.5%"}}>
+      <Card className="py-4" style={{marginBottom: "4%"}}>
           <CardHeader className="pb-0 pt-2 px-4 flex items-center justify-between">
               <div></div>
               <h3 style={{fontSize:"3.5vw"}}>{course.semester} {course.name}</h3>

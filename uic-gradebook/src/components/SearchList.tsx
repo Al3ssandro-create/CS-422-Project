@@ -3,7 +3,7 @@ import { Input } from "@nextui-org/react";
 import Box from "./Box";
 import CourseCard from "./CourseCard";
 import { SearchIcon } from "@primer/octicons-react";
-import { Class, DisplayClass } from "../types/types";
+import { DisplayClass } from "../types/types";
 import { getSearchCourses } from "../api/server";
 
 function SearchList() {
@@ -41,7 +41,7 @@ function SearchList() {
         />
       </div>
       <Box>
-        {results.map((course: Class) => (
+        {results.map((course: DisplayClass) => (
           <div key={course.name} style={{width: "100%"}}>
             <CourseCard course={course} />
           </div>
