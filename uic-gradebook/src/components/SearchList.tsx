@@ -3,60 +3,18 @@ import { Input } from "@nextui-org/react";
 import Box from "./Box";
 import CourseCard from "./CourseCard";
 import { SearchIcon } from "@primer/octicons-react";
-import { Class } from "../types/types";
-
-const res = [
-  {
-    id: 1,
-    name: "course 1",
-    teacher: "teacher 1",
-    semester: "Fall 2023",
-  },
-  {
-    id: 2,
-    name: "coruse 2",
-    teacher: "teacher 2",
-    semester: "Fall 2023",
-  },
-  {
-    id: 3,
-    name: "course 3",
-    teacher: "teacher 3",
-    semester: "Fall 2023",
-  },
-  {
-    id: 4,
-    name: "course 4",
-    teacher: "teacher 4",
-    semester: "Fall 2023",
-  },
-  {
-    id: 5,
-    name: "course 5",
-    teacher: "teacher 5",
-    semester: "Fall 2023",
-  },
-];
-
-// good for both the course search and frineds search
-const getCourses = async (
-  query: string,
-  id: number
-): Promise<{ res: Class[]; id: number }> => {
-  const app: Class[] = res.filter((course) => course.name.includes(query) || course.teacher.includes(query))
-
-  return { res: app, id: id };
-};
+import { DisplayClass } from "../types/types";
+import { getSearchCourses } from "../api/server";
 
 function SearchList() {
   const [search, setSearch] = useState("");
   const [searchId, setId] = useState(0);
-  const [results, setResults] = useState<Class[]>([]);
+  const [results, setResults] = useState<DisplayClass[]>([]);
 
   useEffect(() => {
     const searchCourses = async () => {
       if (search == "") return 
-      const { res, id } = await getCourses(search, searchId);
+      const { res, id } = await getSearchCourses(search, searchId);
 
       if (id == searchId) {
         setResults(res);
@@ -83,7 +41,7 @@ function SearchList() {
         />
       </div>
       <Box>
-        {results.map((course: Class) => (
+        {results.map((course: DisplayClass) => (
           <div key={course.name} style={{width: "100%"}}>
             <CourseCard course={course} />
           </div>

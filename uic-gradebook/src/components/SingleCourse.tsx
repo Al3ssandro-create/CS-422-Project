@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
-import {Card, CardHeader, CardBody, Image} from "@nextui-org/react";
+import { useState } from "react";
+import {Card, CardHeader, CardBody} from "@nextui-org/react";
 import { FaStar } from "react-icons/fa";
 import { Class, Distribution } from "../types/types";
-import * as d3 from 'd3';
+import * as d3 from "d3";
+import { addFavorite, removeFavorite } from "../api/server";
 interface CourseCardProps {
   course: Class;
   userGrade?: string;
+  fav: boolean;
 }
+
 function BarChart({ distribution }: { distribution: Distribution | undefined }) {
     const color = ["#2CE574", "#CDF03A", "#FFE500", "#FF9600", "#FF3924"];
     const data = Object.entries(distribution).map(([grade, count]) => ({ grade, count }));
@@ -41,15 +44,21 @@ function BarChart({ distribution }: { distribution: Distribution | undefined }) 
         </div>
     );
 }
-function SingleCourse({ course, userGrade }: CourseCardProps) {
-    const [starFilled, setStarFilled] = useState(false);
+function SingleCourse({ course, userGrade, fav }: CourseCardProps) {
+    const [starFilled, setStarFilled] = useState(fav);
   
     const handleStarClick = () => {
+        if (starFilled) {
+            removeFavorite(1, course.id);
+        } else {
+            addFavorite(1, course.id);
+        }
+
       setStarFilled(!starFilled);
     };
   
     return (
-      <Card className="py-4" style={{marginRight: "20%", marginLeft: "20%", marginBottom: "1.5%",marginTop: "1.5%"}}>
+      <Card className="py-4" style={{marginBottom: "4%"}}>
           <CardHeader className="pb-0 pt-2 px-4 flex items-center justify-between">
               <div></div>
               <h3 style={{fontSize:"3.5vw"}}>{course.semester} {course.name}</h3>

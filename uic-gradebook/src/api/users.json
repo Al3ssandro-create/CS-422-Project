@@ -1,0 +1,115 @@
+[
+    {
+        "id": 1,
+        "name": "Alice",
+        "surname": "Johnson",
+        "email": "alice.johnson@example.com",
+        "gpa": 3.5,
+        "favClasses": [
+            1,
+            2,
+            11,
+            12
+        ],
+        "friends": [
+            {
+                "id": 2,
+                "status": "accepted"
+            },
+            {
+                "id": 3,
+                "status": "pending"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Bob",
+        "surname": "Smith",
+        "email": "bob.smith@example.com",
+        "gpa": 3.8,
+        "favClasses": [
+            7,
+            8
+        ],
+        "friends": [
+            {
+                "id": 3,
+                "status": "pending"
+            },
+            {
+                "id": 4,
+                "status": "accepted"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Charlie",
+        "surname": "Brown",
+        "email": "charlie.brown@example.com",
+        "gpa": 3.2,
+        "favClasses": [
+            4,
+            7
+        ],
+        "friends": [
+            {
+                "id": 1,
+                "status": "accepted"
+            },
+            {
+                "id": 2,
+                "status": "pending"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "name": "Diana",
+        "surname": "Ross",
+        "email": "diana.ross@example.com",
+        "gpa": 3.9,
+        "favClasses": [
+            3,
+            9
+        ],
+        "friends": [
+            {
+                "id": 2,
+                "status": "accepted"
+            },
+            {
+                "id": 3,
+                "status": "accepted"
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "name": "Eve",
+        "surname": "Jackson",
+        "email": "eve.jackson@example.com",
+        "gpa": 3.7,
+        "favClasses": [],
+        "friends": []
+    },
+    {
+        "id": 6,
+        "name": "Frank",
+        "surname": "Adams",
+        "email": "frank.adams@example.com",
+        "gpa": 3.2,
+        "favClasses": [],
+        "friends": []
+    },
+    {
+        "id": 7,
+        "name": "George",
+        "surname": "Washington",
+        "email": "george.washington@example.com",
+        "gpa": 4,
+        "favClasses": [],
+        "friends": []
+    }
+]

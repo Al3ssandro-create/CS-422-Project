@@ -1,23 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Image } from "@nextui-org/react";
 import Box from "../components/Box";
+import { User } from "../types/types";
+import { getUser } from "../api/server";
+import { FeedPersonIcon } from "@primer/octicons-react";
 
 const ProfilePage = () => {
-  const profileData = {
-    name: "John Cena",
-    gpa: 3.69,
-    profilePicture:
-      "https://upload.wikimedia.org/wikipedia/commons/b/b5/Windows_10_Default_Profile_Picture.svg",
-  };
+  const [user, setUser] = React.useState<User>({
+    id: 1,
+    name: "",
+    surname: "",
+    email: "",
+    gpa: 0,
+  } as User);
+
+  useEffect(() => {
+    getUser(1).then((user) => {if (user) setUser(user)});
+  }, []);
 
   // handle Delete acc
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     // for future use
     alert("Account deleted.");
   };
 
   // handle change password
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     // for future use
     alert("Password changed.");
   };
@@ -51,12 +59,16 @@ const ProfilePage = () => {
       >
         <div className="profile-info">
           <Box style={{ alignItems: "center" }}>
-            <Image
-              src={profileData.profilePicture}
-              width={150}
-              height={150}
-              alt="Profile Picture"
-            />
+            {user?.profilePic === undefined ? (
+              <FeedPersonIcon size={150} />
+            ) : (
+              <Image
+                src={user.profilePic}
+                width={150}
+                height={150}
+                alt="Profile Picture"
+              />
+            )}
 
             <div
               style={{
@@ -67,7 +79,7 @@ const ProfilePage = () => {
                 paddingTop: "4%",
               }}
             >
-              <h1>{profileData.name}</h1>
+              <h1>{user!.name}</h1>
               <div
                 style={{
                   color: "black",
@@ -75,7 +87,7 @@ const ProfilePage = () => {
                   fontSize: "20px",
                 }}
               >
-                <p>GPA: {profileData.gpa}</p>
+                <p>GPA: {user!.gpa}</p>
               </div>
             </div>
           </Box>
@@ -90,12 +102,12 @@ const ProfilePage = () => {
         >
           <div className="profile-button">
             <div style={{ marginBottom: "10px", width: "100px" }}>
-              <Button style={buttonStyle} onClick={handleDeleteAccount}>
+              <Button style={buttonStyle} onClick={async () => handleDeleteAccount()}>
                 Delete Account
               </Button>
             </div>
             <div style={{ marginBottom: "10px", width: "auto" }}>
-              <Button style={buttonStyle} onClick={handleChangePassword}>
+              <Button style={buttonStyle} onClick={async () => handleChangePassword()}>
                 Change Password
               </Button>
             </div>

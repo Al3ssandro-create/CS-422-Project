@@ -1,56 +1,40 @@
 import { Class } from "../types/types";
 import Box from "../components/Box";
-import SingleCourse from '../components/SingleCourse';
+import SingleCourse from "../components/SingleCourse";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getCoursesByName, getUser } from "../api/server";
+
 function Course() {
-  const courses: Class[] = [
-    {
-        id: 1,
-        name: 'CS 450',
-        teacher: 'John Doe',
-        semester: 'Fall 2023',
-        distribution: {
-            a: 10,
-            b: 20,
-            c: 30,
-            d: 20,
-            f: 20
-        }
-    },
-    {
-      id: 2,
-      name: 'CS 450',
-      teacher: 'John Doe',
-      semester: 'Spring 2023',
-      distribution: {
-          a: 10,
-          b: 20,
-          c: 30,
-          d: 20,
-          f: 20
+  const [courses, setCourses] = useState<Class[]>([]);
+  const [fav, setFav] = useState<number[]>([]);
+  const { courseName } = useParams();
+
+  useEffect(() => {
+    getCoursesByName(courseName as string).then((courses) => {
+      
+      setCourses(courses);
+    });
+    getUser(1).then((user) => {
+      if (user) {
+        setFav(user.favClasses);
       }
-  },
-  {
-    id: 3,
-    name: 'CS 450',
-    teacher: 'John Doe',
-    semester: 'Fall 2022',
-    distribution: {
-        a: 10,
-        b: 20,
-        c: 30,
-        d: 20,
-        f: 20
-    }
-},
-    // Add more courses here...
-];
+    });
+  }, []);
+
   return (
     <>
-        <div style={{width: "100%", backgroundColor: "white"}}>
-          <Box>
-            {courses.map(course => <SingleCourse key={course.id} course={course} />)}
-          </Box>
-        </div>
+      <div style={{ width: "100%", backgroundColor: "white" }}>
+        <Box style={{marginTop: "4%"}}>
+          {courses.map((course) => (
+            <SingleCourse
+              key={course.id + course.semester}
+              course={course}
+              fav={fav.includes(course.id)}
+            />
+          ))}
+        </Box>
+      </div>
     </>
   );
 }
