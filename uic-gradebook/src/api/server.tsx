@@ -1,4 +1,10 @@
-import { Class, User, Friend, FriendStatus, DisplayFriend } from "../types/types";
+import {
+  Class,
+  User,
+  Friend,
+  FriendStatus,
+  DisplayFriend,
+} from "../types/types";
 import _users from "./users.json";
 import _classes from "./classes.json";
 
@@ -90,35 +96,50 @@ export const getSearchCourses = async (
 };
 
 export const getFriends = async (userId: number): Promise<DisplayFriend[]> => {
-    const user = await getUser(userId);
+  const user = await getUser(userId);
 
-    if (user === undefined) return [];
+  if (user === undefined) return [];
 
-    const users = await getUsers();
+  const users = await getUsers();
 
-    const friends_id = user.friends.map((friend) => friend.id);
+  const friends_id = user.friends.map((friend) => friend.id);
 
-    const friends = users.filter((friend) => friends_id.includes(friend.id));
+  const friends = users.filter((friend) => friends_id.includes(friend.id));
 
-    return friends.map((friend) => {
-      const status = user.friends.find((f) => f.id === friend.id)?.status;
-        return {
-        ...friend,
-        status: status === undefined ? "pending" : status,
-      };
-    });
-}
+  return friends.map((friend) => {
+    const status = user.friends.find((f) => f.id === friend.id)?.status;
+    return {
+      ...friend,
+      status: status === undefined ? "pending" : status,
+    };
+  });
+};
 
-export const getSearchFriends = async (query: string, id: number): Promise<{ res: User[]; id: number }> => {
+export const getSearchFriends = async (
+  query: string,
+  id: number
+): Promise<{ res: User[]; id: number }> => {
   const target = query.toLowerCase();
 
   const users = await getUsers();
 
   return {
-    res: users.filter(
-      (user) =>
-        (user.name + user.surname).toLowerCase().includes(target)
+    res: users.filter((user) =>
+      (user.name + user.surname).toLowerCase().includes(target)
     ),
     id,
   };
-}
+};
+
+export const addFriend = async (userId: number, friendId: number) => {
+  const users = await getUsers();
+
+  const user = users.find((user) => user.id === userId);
+  const friend = users.find((user) => user.id === friendId);
+
+  if (user === undefined || friend === undefined) return;
+
+  user.friends.push({ id: friendId, status: "pending" });
+
+  localStorage.setItem("users", JSON.stringify(users));
+};
