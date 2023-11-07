@@ -1,8 +1,8 @@
 import { Card, CardHeader } from "@nextui-org/card";
 import { useNavigate } from "react-router-dom";
-import { Class } from "../types/types";
+import { DisplayClass } from "../types/types";
 
-function CourseCard({ course }: { course: Class }) {
+function CourseCard({ course }: { course: DisplayClass }) {
   const navigate = useNavigate();
 
   return (

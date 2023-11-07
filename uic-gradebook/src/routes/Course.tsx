@@ -3,7 +3,7 @@ import Box from "../components/Box";
 import SingleCourse from "../components/SingleCourse";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getSearchCourses, getUser } from "../api/server";
+import { getCoursesByName, getUser } from "../api/server";
 
 function Course() {
   const [courses, setCourses] = useState<Class[]>([]);
@@ -11,9 +11,9 @@ function Course() {
   const { courseName } = useParams();
 
   useEffect(() => {
-    getSearchCourses(courseName as string, 0).then((courses) => {
-      console.log(courses.res);
-      setCourses(courses.res);
+    getCoursesByName(courseName as string).then((courses) => {
+      
+      setCourses(courses);
     });
     getUser(1).then((user) => {
       if (user) {
@@ -28,7 +28,7 @@ function Course() {
         <Box>
           {courses.map((course) => (
             <SingleCourse
-              key={course.id}
+              key={course.id + course.semester}
               course={course}
               fav={fav.includes(course.id)}
             />

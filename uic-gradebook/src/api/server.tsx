@@ -4,6 +4,7 @@ import {
   Friend,
   FriendStatus,
   DisplayFriend,
+  DisplayClass,
 } from "../types/types";
 import _users from "./users.json";
 import _classes from "./classes.json";
@@ -76,19 +77,66 @@ export const getFavCourses = async (userId: number) => {
 export const getSearchCourses = async (
   query: string,
   id: number
-): Promise<{ res: Class[]; id: number }> => {
+): Promise<{ res: DisplayClass[]; id: number }> => {
   const target = query.toLowerCase();
 
   const classes = await getClasses();
 
+  const uniqueCourses = new Set();
+
+  const distinctClasses = classes.filter((course) => {
+    const courseNameMatches = course.name.toLowerCase().includes(target);
+    const teacherNameMatches = course.teacher.toLowerCase().includes(target);
+    const serializedCourse = `${course.name}${course.teacher}`
+
+    if (
+      (courseNameMatches || teacherNameMatches) &&
+      !uniqueCourses.has(serializedCourse)
+    ) {
+      uniqueCourses.add(serializedCourse);
+      return true;
+    }
+
+    return false;
+  });
+
   return {
-    res: classes.filter(
-      (course) =>
-        course.name.toLowerCase().includes(target) ||
-        course.teacher.toLowerCase().includes(target)
-    ),
+    res: distinctClasses,
     id,
   };
+};
+
+function parseSemester(semester: string) {
+  type SemesterOrder = {
+    [key: string]: number;
+    Spring: number;
+    Summer: number;
+    Fall: number;
+  };
+
+  const order: SemesterOrder = { Spring: 1, Summer: 2, Fall: 3 };
+  const parts = semester.split(" ");
+  return {
+    year: parseInt(parts[1], 10),
+    term: order[parts[0]],
+  };
+}
+
+export const getCoursesByName = async (name: string): Promise<Class[]> => {
+  const classes = await getClasses();
+
+  return classes
+    .filter((course) => course.name === name)
+    .sort((a, b) => {
+      const semesterA = parseSemester(a.semester);
+      const semesterB = parseSemester(b.semester);
+
+      if (semesterA.year !== semesterB.year) {
+        return semesterB.year - semesterA.year;
+      } else {
+        return semesterA.term - semesterB.term;
+      }
+    });
 };
 
 export const getFriends = async (userId: number): Promise<DisplayFriend[]> => {
@@ -105,10 +153,10 @@ export const getFriends = async (userId: number): Promise<DisplayFriend[]> => {
   return friends.map((friend) => {
     // The optional chaining operator (?.) ensures that we don't try to call find on undefined or null
     let status = user.friends?.find((f) => f.id === friend.id)?.status;
-  
+
     // Using a default value of "pending" if status is undefined
     status = status ?? "pending";
-    
+
     return {
       ...friend,
       status,
@@ -133,103 +181,105 @@ export const getSearchFriends = async (
 };
 
 export const addFriend = async (userId: number, friendId: number) => {
-    const users = await getUsers();
+  const users = await getUsers();
 
-    const updatedUsers = users.map(u => {
-      if (u.id === userId) {
-        // Clone the user and update the friends array
-        return {
-          ...u,
-          friends: [...u.friends, { id: friendId, status: "requested" }]
-        };
-      } else if (u.id === friendId) {
-        // Clone the friend and update the friends array
-        return {
-          ...u,
-          friends: [...u.friends, { id: userId, status: "pending" }]
-        };
-      }
-      return u; // Return the unchanged user
-    });
-    
-    // Save the updated users array to localStorage
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
+  const updatedUsers = users.map((u) => {
+    if (u.id === userId) {
+      // Clone the user and update the friends array
+      return {
+        ...u,
+        friends: [...u.friends, { id: friendId, status: "requested" }],
+      };
+    } else if (u.id === friendId) {
+      // Clone the friend and update the friends array
+      return {
+        ...u,
+        friends: [...u.friends, { id: userId, status: "pending" }],
+      };
+    }
+    return u; // Return the unchanged user
+  });
+
+  // Save the updated users array to localStorage
+  localStorage.setItem("users", JSON.stringify(updatedUsers));
 };
 
 export const removeFriend = async (userId: number, friendId: number) => {
-    const users = await getUsers();
+  const users = await getUsers();
 
-    const updatedUsers = users.map(u => {
-      if (u.id === userId) {
-        // Clone the user and update the friends array
-        return {
-          ...u,
-          friends: u.friends.filter(f => f.id !== friendId)
-        };
-      } else if (u.id === friendId) {
-        // Clone the friend and update the friends array
-        return {
-          ...u,
-          friends: u.friends.filter(f => f.id !== userId)
-        };
-      }
-      return u; // Return the unchanged user
-    });
-    
-    // Save the updated users array to localStorage
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-}
+  const updatedUsers = users.map((u) => {
+    if (u.id === userId) {
+      // Clone the user and update the friends array
+      return {
+        ...u,
+        friends: u.friends.filter((f) => f.id !== friendId),
+      };
+    } else if (u.id === friendId) {
+      // Clone the friend and update the friends array
+      return {
+        ...u,
+        friends: u.friends.filter((f) => f.id !== userId),
+      };
+    }
+    return u; // Return the unchanged user
+  });
+
+  // Save the updated users array to localStorage
+  localStorage.setItem("users", JSON.stringify(updatedUsers));
+};
 
 export const acceptFriend = async (userId: number, friendId: number) => {
-    const users = await getUsers();
+  const users = await getUsers();
 
-    const updatedUsers = users.map(u => {
-      if (u.id === userId) {
-        // Clone the user and update the friends array
-        return {
-          ...u,
-          friends: u.friends.map(f => {
-            if (f.id === friendId) {
-              return { ...f, status: "accepted" };
-            }
-            return f;
-          })
-        };
-      } else if (u.id === friendId) {
-        // Clone the friend and update the friends array
-        return {
-          ...u,
-          friends: u.friends.map(f => {
-            if (f.id === userId) {
-              return { ...f, status: "accepted" };
-            }
-            return f;
-          })
-        };
-      }
-      return u; // Return the unchanged user
-    });
-    
-    // Save the updated users array to localStorage
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-}
+  const updatedUsers = users.map((u) => {
+    if (u.id === userId) {
+      // Clone the user and update the friends array
+      return {
+        ...u,
+        friends: u.friends.map((f) => {
+          if (f.id === friendId) {
+            return { ...f, status: "accepted" };
+          }
+          return f;
+        }),
+      };
+    } else if (u.id === friendId) {
+      // Clone the friend and update the friends array
+      return {
+        ...u,
+        friends: u.friends.map((f) => {
+          if (f.id === userId) {
+            return { ...f, status: "accepted" };
+          }
+          return f;
+        }),
+      };
+    }
+    return u; // Return the unchanged user
+  });
+
+  // Save the updated users array to localStorage
+  localStorage.setItem("users", JSON.stringify(updatedUsers));
+};
 
 export const addFavorite = async (userId: number, courseId: number) => {
-    const users = await getUsers();
+  const users = await getUsers();
 
-    const updatedUsers = users.map(u =>
-      u.id === userId ? { ...u, favClasses: [...u.favClasses, courseId] } : u
-    );
-    
-    localStorage.setItem("users", JSON.stringify(updatedUsers));    
-}
+  const updatedUsers = users.map((u) =>
+    u.id === userId ? { ...u, favClasses: [...u.favClasses, courseId] } : u
+  );
+
+  localStorage.setItem("users", JSON.stringify(updatedUsers));
+};
 
 export const removeFavorite = async (userId: number, courseId: number) => {
-    const users = await getUsers();
+  const users = await getUsers();
 
-    const updatedUsers = users.map(u =>
-      u.id === userId ? { ...u, favClasses: u.favClasses.filter(c => c !== courseId) } : u
-    );
-    
-    localStorage.setItem("users", JSON.stringify(updatedUsers));    
-}
+  const updatedUsers = users.map((u) =>
+    u.id === userId
+      ? { ...u, favClasses: u.favClasses.filter((c) => c !== courseId) }
+      : u
+  );
+
+  localStorage.setItem("users", JSON.stringify(updatedUsers));
+};

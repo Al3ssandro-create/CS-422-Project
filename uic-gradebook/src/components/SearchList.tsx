@@ -3,13 +3,13 @@ import { Input } from "@nextui-org/react";
 import Box from "./Box";
 import CourseCard from "./CourseCard";
 import { SearchIcon } from "@primer/octicons-react";
-import { Class } from "../types/types";
+import { Class, DisplayClass } from "../types/types";
 import { getSearchCourses } from "../api/server";
 
 function SearchList() {
   const [search, setSearch] = useState("");
   const [searchId, setId] = useState(0);
-  const [results, setResults] = useState<Class[]>([]);
+  const [results, setResults] = useState<DisplayClass[]>([]);
 
   useEffect(() => {
     const searchCourses = async () => {

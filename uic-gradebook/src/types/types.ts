@@ -26,6 +26,11 @@ export interface Class {
   distribution?: Distribution;
 }
 
+export interface DisplayClass {
+  name: string;
+  teacher: string;
+}
+
 export interface Distribution {
   a: number;
   b: number;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {Card, CardHeader, CardBody} from "@nextui-org/react";
 import { FaStar } from "react-icons/fa";
 import { Class, Distribution } from "../types/types";
@@ -9,6 +9,7 @@ interface CourseCardProps {
   userGrade?: string;
   fav: boolean;
 }
+
 function BarChart({ distribution }: { distribution: Distribution | undefined }) {
     const color = ["#2CE574", "#CDF03A", "#FFE500", "#FF9600", "#FF3924"];
     const data = Object.entries(distribution).map(([grade, count]) => ({ grade, count }));
