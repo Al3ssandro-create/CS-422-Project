@@ -103,9 +103,11 @@ export const getFriends = async (userId: number): Promise<DisplayFriend[]> => {
   const friends = users.filter((friend) => friends_id.includes(friend.id));
 
   return friends.map((friend) => {
-    let status = user.friends.find((f) => f.id === friend.id)?.status;
-
-    if (status === undefined) status = "pending"
+    // The optional chaining operator (?.) ensures that we don't try to call find on undefined or null
+    let status = user.friends?.find((f) => f.id === friend.id)?.status;
+  
+    // Using a default value of "pending" if status is undefined
+    status = status ?? "pending";
     
     return {
       ...friend,

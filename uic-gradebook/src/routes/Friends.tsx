@@ -11,11 +11,23 @@ import { getFriends, getSearchFriends } from "../api/server";
 import { DisplayFriend, User } from "../types/types";
 
 // FriendActions component to handle the follow and pending actions
-const FriendActions = ({ friend, showFriends, onLinkReqClick }) => {
+const FriendActions = ({
+  friend,
+  showFriends,
+  onLinkReqClick,
+}: {
+  friend: DisplayFriend;
+  showFriends: boolean;
+  onLinkReqClick: (f: DisplayFriend, op: string) => void;
+}) => {
   if (!showFriends) {
     if (!friend?.status) {
       return (
-        <Button className="follow-button" disableRipple>
+        <Button
+          className="follow-button"
+          disableRipple
+          onClick={() => onLinkReqClick(friend, "follow")}
+        >
           Follow
         </Button>
       );
@@ -30,28 +42,52 @@ const FriendActions = ({ friend, showFriends, onLinkReqClick }) => {
           width: "100%",
         }}
       >
-        <div onClick={() => onLinkReqClick()}>
+        <div onClick={() => onLinkReqClick(friend, "refuse")}>
           <XCircleIcon />
         </div>
-        <div onClick={() => onLinkReqClick()}>
+        <div onClick={() => onLinkReqClick(friend, "accept")}>
           <CheckCircleIcon />
         </div>
       </div>
+    );
+  } else if (friend?.status === "accepted") {
+    return (
+      <Button
+        className="follow-button"
+        disableRipple
+        onClick={() => onLinkReqClick(friend, "unlink")}
+      >
+        Unlink
+      </Button>
     );
   }
   return <div>Pending</div>;
 };
 
 // FriendItem component to avoid repeating JSX
-const FriendItem = ({ friend, showFriends, onLinkReqClick }) => {
+const FriendItem = ({
+  friend,
+  showFriends,
+  onLinkReqClick,
+}: {
+  friend: DisplayFriend;
+  showFriends: boolean;
+  onLinkReqClick: (f: DisplayFriend, op: string) => void;
+}) => {
   return (
     <div key={friend.id}>
       <Card
         shadow="lg"
-        style={{ marginTop: "2%", marginBottom: "2%" }}
+        style={{
+          marginTop: "2%",
+          marginBottom: "2%",
+          minHeight: "8vh",
+          display: "flex",
+          justifyContent: "center",
+        }}
         fullWidth
       >
-        <CardBody>
+        <CardBody style={{ justifyContent: "center" }}>
           <div
             style={{
               display: "flex",
@@ -103,6 +139,11 @@ function Friends() {
   }, []);
 
   useEffect(() => {
+    if (friends.length === 0) setShow(false);
+    else setShow(true);
+  }, [friends]);
+
+  useEffect(() => {
     const fetchSearchResults = async () => {
       if (searchString === "") {
         setShow(true);
@@ -118,8 +159,24 @@ function Friends() {
     fetchSearchResults();
   }, [searchString]);
 
-  const onLinkReqClick = () => console.log("CLICK");
+  // follow, accept, refuse, unlink
+  const onLinkReqClick = (friend: DisplayFriend, op: string) => {
+    console.log(friend, op);
 
+    if (op == "accept") {
+      setFriends((prev) =>
+        prev.map((f) => (f.id === friend.id ? { ...f, status: "accepted" } : f))
+      );
+    } else if (op == "refuse") {
+      setFriends((prev) =>
+        prev.filter((f) => (f.id !== friend.id))
+      );
+    } else if (op == "follow") {
+      setFriends((prev) => [...prev, { ...friend, status: "pending" }]);
+    } else if (op == "unlink") {
+      setFriends((prev) => prev.filter((f) => f.id !== friend.id));
+    }
+  };
   // Function to handle friend request acceptance or denial
   // Uncomment and complete this function as needed
   // const onLinkReqClick = (friendId, isAccept) => {
@@ -136,9 +193,11 @@ function Friends() {
       </div>
       <Box>
         <div style={{ width: "100%" }}>
-          {showFriends ? (
+          {showFriends && searchString === "" ? (
             <>
-              <h1 style={{ textAlign: "center" }}>Friends and Requests</h1>
+              <div style={{ marginTop: "4%", marginBottom: "4%" }}></div>
+              <p style={{ textAlign: "center" }}>Friends and Requests</p>
+              <hr />
               {friends?.map((friend) => (
                 <FriendItem
                   key={friend.id}
@@ -153,7 +212,7 @@ function Friends() {
               {searchRes?.map((user) => (
                 <FriendItem
                   key={user.id}
-                  friend={user}
+                  friend={user as DisplayFriend}
                   showFriends={showFriends}
                   onLinkReqClick={onLinkReqClick}
                 />

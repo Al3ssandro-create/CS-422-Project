@@ -1,8 +1,8 @@
-export type FriendStatus = "pending" | "accepted";
+export type FriendStatus = "pending" | "accepted" | "requested";
 
 export interface Friend {
   id: number;
-  status: FriendStatus;
+  status?: FriendStatus;
 }
 
 export interface User {
