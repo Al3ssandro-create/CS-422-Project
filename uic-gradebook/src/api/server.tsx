@@ -156,6 +156,64 @@ export const addFriend = async (userId: number, friendId: number) => {
     localStorage.setItem("users", JSON.stringify(updatedUsers));
 };
 
+export const removeFriend = async (userId: number, friendId: number) => {
+    const users = await getUsers();
+
+    const updatedUsers = users.map(u => {
+      if (u.id === userId) {
+        // Clone the user and update the friends array
+        return {
+          ...u,
+          friends: u.friends.filter(f => f.id !== friendId)
+        };
+      } else if (u.id === friendId) {
+        // Clone the friend and update the friends array
+        return {
+          ...u,
+          friends: u.friends.filter(f => f.id !== userId)
+        };
+      }
+      return u; // Return the unchanged user
+    });
+    
+    // Save the updated users array to localStorage
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+}
+
+export const acceptFriend = async (userId: number, friendId: number) => {
+    const users = await getUsers();
+
+    const updatedUsers = users.map(u => {
+      if (u.id === userId) {
+        // Clone the user and update the friends array
+        return {
+          ...u,
+          friends: u.friends.map(f => {
+            if (f.id === friendId) {
+              return { ...f, status: "accepted" };
+            }
+            return f;
+          })
+        };
+      } else if (u.id === friendId) {
+        // Clone the friend and update the friends array
+        return {
+          ...u,
+          friends: u.friends.map(f => {
+            if (f.id === userId) {
+              return { ...f, status: "accepted" };
+            }
+            return f;
+          })
+        };
+      }
+      return u; // Return the unchanged user
+    });
+    
+    // Save the updated users array to localStorage
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+}
+
 export const addFavorite = async (userId: number, courseId: number) => {
     const users = await getUsers();
 

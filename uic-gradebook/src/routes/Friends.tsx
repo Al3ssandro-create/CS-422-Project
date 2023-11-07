@@ -7,7 +7,7 @@ import {
 } from "@primer/octicons-react";
 import Box from "../components/Box";
 import { Button, Card, CardBody } from "@nextui-org/react";
-import { addFriend, getFriends, getSearchFriends } from "../api/server";
+import { acceptFriend, addFriend, getFriends, getSearchFriends, removeFriend } from "../api/server";
 import { DisplayFriend, User } from "../types/types";
 
 // FriendActions component to handle the follow and pending actions
@@ -43,10 +43,14 @@ const FriendActions = ({
         }}
       >
         <div onClick={() => onLinkReqClick(friend, "refuse")}>
-          <XCircleIcon />
+          <div style={{color: "red"}}>
+          <XCircleIcon size={24}/>
+          </div>
         </div>
         <div onClick={() => onLinkReqClick(friend, "accept")}>
-          <CheckCircleIcon />
+          <div style={{color: "green"}}>
+          <CheckCircleIcon size={24}/>
+          </div>
         </div>
       </div>
     );
@@ -98,7 +102,7 @@ const FriendItem = ({
             <div
               style={{ display: "flex", alignItems: "center", width: "70%" }}
             >
-              <PersonIcon size={24} />
+              <PersonIcon size={24}/>
               <p
                 style={{ marginLeft: "2%" }}
               >{`${friend.name} ${friend.surname}`}</p>
@@ -164,10 +168,12 @@ function Friends() {
     console.log(friend, op);
 
     if (op == "accept") {
+      acceptFriend(1, friend.id)
       setFriends((prev) =>
         prev.map((f) => (f.id === friend.id ? { ...f, status: "accepted" } : f))
       );
     } else if (op == "refuse") {
+      removeFriend(1, friend.id)
       setFriends((prev) =>
         prev.filter((f) => (f.id !== friend.id))
       );
@@ -175,6 +181,7 @@ function Friends() {
       addFriend(1, friend.id)
       setFriends((prev) => [...prev, { ...friend, status: "requested" }]);
     } else if (op == "unlink") {
+      removeFriend(1, friend.id)
       setFriends((prev) => prev.filter((f) => f.id !== friend.id));
     }
   };

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import {Card, CardHeader, CardBody, Image} from "@nextui-org/react";
+import React, { useState } from "react";
+import {Card, CardHeader, CardBody} from "@nextui-org/react";
 import { FaStar } from "react-icons/fa";
 import { Class, Distribution } from "../types/types";
-import * as d3 from 'd3';
+import * as d3 from "d3";
 import { addFavorite, removeFavorite } from "../api/server";
 interface CourseCardProps {
   course: Class;
