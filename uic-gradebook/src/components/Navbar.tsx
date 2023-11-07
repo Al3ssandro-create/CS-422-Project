@@ -4,7 +4,7 @@ import {
   HomeIcon,
   HomeFillIcon,
   PersonIcon,
-  PersonFillIcon
+  PersonFillIcon,
 } from "@primer/octicons-react";
 import { BiSearchAlt, BiSearch, BiSolidGroup, BiGroup } from "react-icons/bi";
 
@@ -16,27 +16,35 @@ function Navbar() {
       <div style={{ ...flexRow, ...stickyFooter }}>
         <NavLink to="/friends">
           {useMatch("/friends") ? (
-            <BiSolidGroup size={32} />
+            <BiSolidGroup size={32} color="white" />
           ) : (
-            <BiGroup size={32} />
+            <BiGroup size={32} color="white" />
           )}
         </NavLink>
         <NavLink to="/">
-          {useMatch("/") ? <HomeFillIcon size={32} /> : <HomeIcon size={32} />}
+          <div style={{ color: "white" }}>
+            {useMatch("/") ? (
+              <HomeFillIcon size={32} />
+            ) : (
+              <HomeIcon size={32} />
+            )}
+          </div>
         </NavLink>
         <NavLink to="/searchcourse">
-        {useMatch("/searchcourse") ? (
-            <BiSearchAlt size={32} />
-        ) : (
-            <BiSearch size={32} />
+          {useMatch("/searchcourse") ? (
+            <BiSearchAlt size={32} color="white" />
+          ) : (
+            <BiSearch size={32} color="white" />
           )}
         </NavLink>
         <NavLink to="/profile">
-          {useMatch("/profile") ? (
-            <PersonFillIcon size={32} />
-          ) : (
-            <PersonIcon size={32} />
-          )}
+          <div style={{ color: "white" }}>
+            {useMatch("/profile") ? (
+              <PersonFillIcon size={32} />
+            ) : (
+              <PersonIcon size={32} />
+            )}
+          </div>
         </NavLink>
       </div>
     </>

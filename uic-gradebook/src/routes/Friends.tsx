@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
-import { users } from "../components/Friends/constants";
 import {
   XCircleIcon,
   PersonIcon,
@@ -8,31 +7,19 @@ import {
 } from "@primer/octicons-react";
 import Box from "../components/Box";
 import { Button } from "@nextui-org/react";
+import { getFriends } from "../api/server";
+import { DisplayFriend, User } from "../types/types";
 
 function Friends() {
   const [searchString, setSearchString] = useState("");
-  const [usersToShow, setUsersToShow] = useState(users);
-  const [isReqFilter, setIsReqFilter] = useState(false);
-  const [allUsers, setAllUsers] = useState(users);
-
-  const getCurrentUsers = () => {
-    if (isReqFilter) {
-      return allUsers.filter(
-        (user) => user.status === "pending" || user.status === "send"
-      );
-    } else {
-      if (searchString) {
-        return allUsers.filter((user) => !user?.status);
-      }
-      return allUsers.filter((user) => user.status === "accepted");
-    }
-  };
+  const [showFriends, setShow] = useState<boolean>(true);
+  const [friends, setFriends] = useState<DisplayFriend[]>();
+  const [searchRes, setSearchRes] = useState<DisplayFriend[]>();
 
   useEffect(() => {
-    setSearchString("");
-    setUsersToShow(getCurrentUsers());
+    getFriends(1).then((friends) => setFriends(friends));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isReqFilter, allUsers]);
+  }, []);
 
   const onLinkReqClick = (i: number, isAccept: boolean) => {
     const user = usersToShow[i];
@@ -52,17 +39,6 @@ function Friends() {
     setAllUsers(usrs);
   };
 
-  useEffect(() => {
-    const filteredUsers = getCurrentUsers();
-    const newUsers = filteredUsers.filter((user) =>
-      (user.name + user.surname)
-        .toLowerCase()
-        .includes(searchString.toLowerCase())
-    );
-    setUsersToShow(newUsers);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchString]);
-
   return (
     <Box>
       <div style={{ marginTop: "4%", marginBottom: "4%", width: "100%" }}>
@@ -72,19 +48,8 @@ function Friends() {
         />
       </div>
       <Box>
-      {!isReqFilter && (
-        <Button
-        fullWidth
-          style={{ margin: "1rem", fontWeight: "bold"}}
-          onClick={() => {
-            setIsReqFilter(true);
-          }}
-        >
-          Requests
-        </Button>
-      )}
       <div style={{ overflow: "auto", height: "430px", width: "100%" }}>
-        {usersToShow.map((user, i) => {
+        {searchRes && searchRes.map((user, i) => {
           return (
             <div
               style={{
@@ -104,7 +69,7 @@ function Friends() {
                   {user.name + " " + user.surname}
                 </span>
               </span>
-              {!isReqFilter ? (
+              {!showFriends ? (
                 !user?.status ? (
                   <Button
                     onClick={() => onClick(i)}

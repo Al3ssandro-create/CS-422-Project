@@ -5,13 +5,15 @@ import { useLocation } from "react-router-dom";
 import "../styles/css/header.css";
 import styled from "styled-components";
 
-export default function Header() {
-  const location = useLocation();
-  const StyledNavBar = styled(Navbar)`
+const StyledNavBar = styled(Navbar)`
     background-color: #9e2d32;
     min-height: 10vh;
     width: 100%;
   `;
+
+export default function Header() {
+  const location = useLocation();
+  
   const navigate = useNavigate();
   return (
     <StyledNavBar>
