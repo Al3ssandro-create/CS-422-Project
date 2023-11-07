@@ -1,7 +1,7 @@
 [
     {
       "id": 1,
-      "name": "Calculus I",
+      "name": "MATH 101",
       "teacher": "Dr. Smith",
       "semester": "Fall 2023",
       "distribution": {
@@ -14,7 +14,7 @@
     },
     {
       "id": 2,
-      "name": "Introduction to Philosophy",
+      "name": "PHY 204",
       "teacher": "Prof. Johnson",
       "semester": "Spring 2023",
       "distribution": {
@@ -27,7 +27,7 @@
     },
     {
       "id": 3,
-      "name": "General Chemistry",
+      "name": "CHEM 101",
       "teacher": "Dr. Lee",
       "semester": "Summer 2023",
       "distribution": {
@@ -40,19 +40,33 @@
     },
     {
       "id": 4,
-      "name": "World History",
+      "name": "HIST 304",
       "teacher": "Dr. Martinez",
-      "semester": "Fall 2023"
+      "semester": "Fall 2023",
+      "distribution": {
+        "a": 20,
+        "b": 30,
+        "c": 30,
+        "d": 15,
+        "f": 5
+      }
     },
     {
       "id": 5,
-      "name": "Microeconomics",
+      "name": "BUS 402",
       "teacher": "Prof. Reynolds",
-      "semester": "Spring 2023"
+      "semester": "Spring 2023",
+      "distribution": {
+        "a": 15,
+        "b": 25,
+        "c": 40,
+        "d": 15,
+        "f": 5
+      }
     },
     {
       "id": 6,
-      "name": "Organic Chemistry",
+      "name": "CHEM 206",
       "teacher": "Dr. Chang",
       "semester": "Fall 2023",
       "distribution": {
@@ -65,13 +79,20 @@
     },
     {
       "id": 7,
-      "name": "Psychology 101",
+      "name": "PHY 101",
       "teacher": "Dr. Gonzalez",
-      "semester": "Spring 2023"
+      "semester": "Spring 2023",
+      "distribution": {
+        "a": 15,
+        "b": 25,
+        "c": 40,
+        "d": 15,
+        "f": 5
+      }
     },
     {
       "id": 8,
-      "name": "Linear Algebra",
+      "name": "MATH 107",
       "teacher": "Prof. Patel",
       "semester": "Fall 2023",
       "distribution": {
@@ -84,34 +105,36 @@
     },
     {
       "id": 9,
-      "name": "Computer Science Fundamentals",
+      "name": "CS 106",
       "teacher": "Dr. O'Neil",
-      "semester": "Summer 2023"
+      "semester": "Summer 2023",
+      "distribution": { "a": 30, "b": 20, "c": 25, "d": 15, "f": 10 }
     },
     {
       "id": 10,
-      "name": "Environmental Science",
+      "name": "SCI 404",
       "teacher": "Prof. Kim",
-      "semester": "Fall 2023"
+      "semester": "Fall 2023",
+      "distribution": { "a": 30, "b": 20, "c": 25, "d": 15, "f": 10 }
     },
     {
       "id": 11,
       "name": "CS 450",
-      "teacher": "Teacher 1",
+      "teacher": "Marco Santa",
       "semester": "Fall 2021",
       "distribution": { "a": 59, "b": 25, "c": 25, "d": 15, "f": 10 }
     },
     {
       "id": 12,
       "name": "CS 361",
-      "teacher": "Teacher 2",
+      "teacher": "Dr. Mark",
       "semester": "Spring 2022",
       "distribution": { "a": 30, "b": 20, "c": 25, "d": 15, "f": 10 }
     },
     {
       "id": 13,
       "name": "CS 422",
-      "teacher": "Teacher 3",
+      "teacher": "Andruid Kerne",
       "semester": "Fall 2022",
       "distribution": { "a": 20, "b": 15, "c": 25, "d": 15, "f": 10 }
     }

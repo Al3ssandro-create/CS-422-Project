@@ -3,9 +3,11 @@ import {Card, CardHeader, CardBody, Image} from "@nextui-org/react";
 import { FaStar } from "react-icons/fa";
 import { Class, Distribution } from "../types/types";
 import * as d3 from 'd3';
+import { addFavorite, removeFavorite } from "../api/server";
 interface CourseCardProps {
   course: Class;
   userGrade?: string;
+  fav: boolean;
 }
 function BarChart({ distribution }: { distribution: Distribution | undefined }) {
     const color = ["#2CE574", "#CDF03A", "#FFE500", "#FF9600", "#FF3924"];
@@ -41,10 +43,16 @@ function BarChart({ distribution }: { distribution: Distribution | undefined }) 
         </div>
     );
 }
-function SingleCourse({ course, userGrade }: CourseCardProps) {
-    const [starFilled, setStarFilled] = useState(false);
+function SingleCourse({ course, userGrade, fav }: CourseCardProps) {
+    const [starFilled, setStarFilled] = useState(fav);
   
     const handleStarClick = () => {
+        if (starFilled) {
+            removeFavorite(1, course.id);
+        } else {
+            addFavorite(1, course.id);
+        }
+
       setStarFilled(!starFilled);
     };
   

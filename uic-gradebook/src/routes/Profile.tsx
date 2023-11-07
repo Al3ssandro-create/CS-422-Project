@@ -19,13 +19,13 @@ const ProfilePage = () => {
   }, []);
 
   // handle Delete acc
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     // for future use
     alert("Account deleted.");
   };
 
   // handle change password
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     // for future use
     alert("Password changed.");
   };
@@ -102,12 +102,12 @@ const ProfilePage = () => {
         >
           <div className="profile-button">
             <div style={{ marginBottom: "10px", width: "100px" }}>
-              <Button style={buttonStyle} onClick={handleDeleteAccount}>
+              <Button style={buttonStyle} onClick={async () => handleDeleteAccount()}>
                 Delete Account
               </Button>
             </div>
             <div style={{ marginBottom: "10px", width: "auto" }}>
-              <Button style={buttonStyle} onClick={handleChangePassword}>
+              <Button style={buttonStyle} onClick={async () => handleChangePassword()}>
                 Change Password
               </Button>
             </div>

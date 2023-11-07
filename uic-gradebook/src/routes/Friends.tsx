@@ -7,7 +7,7 @@ import {
 } from "@primer/octicons-react";
 import Box from "../components/Box";
 import { Button, Card, CardBody } from "@nextui-org/react";
-import { getFriends, getSearchFriends } from "../api/server";
+import { addFriend, getFriends, getSearchFriends } from "../api/server";
 import { DisplayFriend, User } from "../types/types";
 
 // FriendActions component to handle the follow and pending actions
@@ -172,6 +172,7 @@ function Friends() {
         prev.filter((f) => (f.id !== friend.id))
       );
     } else if (op == "follow") {
+      addFriend(1, friend.id)
       setFriends((prev) => [...prev, { ...friend, status: "requested" }]);
     } else if (op == "unlink") {
       setFriends((prev) => prev.filter((f) => f.id !== friend.id));

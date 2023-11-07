@@ -133,15 +133,45 @@ export const getSearchFriends = async (
 };
 
 export const addFriend = async (userId: number, friendId: number) => {
-  const users = await getUsers();
+    const users = await getUsers();
 
-  const user = users.find((user) => user.id === userId);
-  const friend = users.find((user) => user.id === friendId);
-
-  if (user === undefined || friend === undefined) return;
-
-  user.friends.push({ id: friendId, status: "pending" });
-  friend.friends.push({ id: userId, status: "pending" });
-
-  localStorage.setItem("users", JSON.stringify({...users, user, friend}));
+    const updatedUsers = users.map(u => {
+      if (u.id === userId) {
+        // Clone the user and update the friends array
+        return {
+          ...u,
+          friends: [...u.friends, { id: friendId, status: "requested" }]
+        };
+      } else if (u.id === friendId) {
+        // Clone the friend and update the friends array
+        return {
+          ...u,
+          friends: [...u.friends, { id: userId, status: "pending" }]
+        };
+      }
+      return u; // Return the unchanged user
+    });
+    
+    // Save the updated users array to localStorage
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
 };
+
+export const addFavorite = async (userId: number, courseId: number) => {
+    const users = await getUsers();
+
+    const updatedUsers = users.map(u =>
+      u.id === userId ? { ...u, favClasses: [...u.favClasses, courseId] } : u
+    );
+    
+    localStorage.setItem("users", JSON.stringify(updatedUsers));    
+}
+
+export const removeFavorite = async (userId: number, courseId: number) => {
+    const users = await getUsers();
+
+    const updatedUsers = users.map(u =>
+      u.id === userId ? { ...u, favClasses: u.favClasses.filter(c => c !== courseId) } : u
+    );
+    
+    localStorage.setItem("users", JSON.stringify(updatedUsers));    
+}

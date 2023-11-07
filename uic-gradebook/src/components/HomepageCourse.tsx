@@ -162,7 +162,7 @@ function HomepageCourse({
               fontSize: "3vw",
             }}
           >
-            Professor, {teacher}
+            {teacher}
           </span>
         </div>
       </div>
