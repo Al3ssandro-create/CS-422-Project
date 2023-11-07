@@ -157,7 +157,7 @@ function Friends() {
       }
     };
     fetchSearchResults();
-  }, [searchString]);
+  }, [searchString, friends]);
 
   // follow, accept, refuse, unlink
   const onLinkReqClick = (friend: DisplayFriend, op: string) => {
@@ -172,7 +172,7 @@ function Friends() {
         prev.filter((f) => (f.id !== friend.id))
       );
     } else if (op == "follow") {
-      setFriends((prev) => [...prev, { ...friend, status: "pending" }]);
+      setFriends((prev) => [...prev, { ...friend, status: "requested" }]);
     } else if (op == "unlink") {
       setFriends((prev) => prev.filter((f) => f.id !== friend.id));
     }
