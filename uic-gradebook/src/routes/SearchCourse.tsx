@@ -1,4 +1,3 @@
-import React from "react";
 import SearchList from "../components/SearchList";
 import Box from "../components/Box";
 
