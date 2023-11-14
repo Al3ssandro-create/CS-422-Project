@@ -8,6 +8,7 @@ interface CourseCardProps {
   course: Class;
   userGrade?: string;
   fav: boolean;
+  userId: number;
 }
 
 function BarChart({ distribution }: { distribution: Distribution | undefined }) {
@@ -44,14 +45,14 @@ function BarChart({ distribution }: { distribution: Distribution | undefined }) 
         </div>
     );
 }
-function SingleCourse({ course, userGrade, fav }: CourseCardProps) {
+function SingleCourse({ course, userGrade, fav, userId }: CourseCardProps) {
     const [starFilled, setStarFilled] = useState(fav);
   
     const handleStarClick = () => {
         if (starFilled) {
-            removeFavorite(1, course.id);
+            removeFavorite(userId, course.id);
         } else {
-            addFavorite(1, course.id);
+            addFavorite(userId, course.id);
         }
 
       setStarFilled(!starFilled);
