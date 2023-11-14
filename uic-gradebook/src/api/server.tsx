@@ -283,3 +283,7 @@ export const removeFavorite = async (userId: number, courseId: number) => {
 
   localStorage.setItem("users", JSON.stringify(updatedUsers));
 };
+
+export const getUserId = async () => {
+  return 1
+};

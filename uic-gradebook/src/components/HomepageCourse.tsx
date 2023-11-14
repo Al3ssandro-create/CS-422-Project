@@ -13,7 +13,7 @@ function D3PieChart({ data }: { data: Array<number> }) {
       .outerRadius(Math.min(400, 400) / 2);
     const arcs = pieGenerator(data);
     svg
-      .attr("viewBox", [-200, -200, 500, 410].join(" "))
+      .attr("viewBox", [-200, -200, 400, 410].join(" "))
       .selectAll("path")
       .data(arcs)
       .join("path")
@@ -45,7 +45,7 @@ function D3PieChart({ data }: { data: Array<number> }) {
       .style("width", "auto");
 
     svg
-      .attr("viewBox", [-200, -200, 500, 410].join(" "))
+      .attr("viewBox", [-200, -200, 400, 410].join(" "))
       .selectAll("path")
       .data(arcs)
       .join("path")
@@ -117,7 +117,7 @@ function HomepageCourse({
         marginRight: "2%",
       }}
     >
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <div style={{ flex: "0 60%", padding: "3.5%", borderRadius: "10 px" }}>
           <D3PieChart data={data} />
         </div>
@@ -129,30 +129,19 @@ function HomepageCourse({
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
+            alignItems: "center",
             textAlign: "left",
           }}
         >
           <span
             style={{
               fontWeight: "bold",
-              display: "block",
               whiteSpace: "nowrap",
               fontSize: "3vw",
               marginBottom: "5%",
             }}
           >
-            {semester}
-          </span>
-          <span
-            style={{
-              fontWeight: "bold",
-              display: "block",
-              whiteSpace: "nowrap",
-              fontSize: "3vw",
-              marginBottom: "5%",
-            }}
-          >
-            {name}
+            {semester} {name}
           </span>
           <span
             style={{

@@ -7,7 +7,7 @@ import {
 } from "@primer/octicons-react";
 import Box from "../components/Box";
 import { Button, Card, CardBody } from "@nextui-org/react";
-import { acceptFriend, addFriend, getFriends, getSearchFriends, removeFriend } from "../api/server";
+import { acceptFriend, addFriend, getFriends, getSearchFriends, getUserId, removeFriend } from "../api/server";
 import { DisplayFriend, User } from "../types/types";
 
 // FriendActions component to handle the follow and pending actions
@@ -134,13 +134,19 @@ function Friends() {
   const [friends, setFriends] = useState<DisplayFriend[]>([]);
   const [searchRes, setSearchRes] = useState<User[]>([]);
 
+  const [userId, setUserId] = useState<number>();
+
+  useEffect(() => {
+    getUserId().then((id) => setUserId(id));
+  }, []);
+
   useEffect(() => {
     const fetchFriends = async () => {
-      const friendsData = await getFriends(1);
+      const friendsData = await getFriends(userId as number);
       setFriends(friendsData);
     };
     fetchFriends();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     if (friends.length === 0) setShow(false);
@@ -168,20 +174,20 @@ function Friends() {
     console.log(friend, op);
 
     if (op == "accept") {
-      acceptFriend(1, friend.id)
+      acceptFriend(userId as number, friend.id)
       setFriends((prev) =>
         prev.map((f) => (f.id === friend.id ? { ...f, status: "accepted" } : f))
       );
     } else if (op == "refuse") {
-      removeFriend(1, friend.id)
+      removeFriend(userId as number, friend.id)
       setFriends((prev) =>
         prev.filter((f) => (f.id !== friend.id))
       );
     } else if (op == "follow") {
-      addFriend(1, friend.id)
+      addFriend(userId as number, friend.id)
       setFriends((prev) => [...prev, { ...friend, status: "requested" }]);
     } else if (op == "unlink") {
-      removeFriend(1, friend.id)
+      removeFriend(userId as number, friend.id)
       setFriends((prev) => prev.filter((f) => f.id !== friend.id));
     }
   };
