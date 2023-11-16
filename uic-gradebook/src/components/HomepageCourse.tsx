@@ -28,7 +28,7 @@ function D3PieChart({ data }: { data: Array<number> }) {
       .attr("transform", (d) => `translate(${arcGenerator.centroid(d as any)})`)
       .attr("text-anchor", "middle")
       .attr("alignment-baseline", "middle")
-      .style("font-size", "2vw")
+      .style("font-size", "3vh")
       .text(
         (d) =>
           `${Math.round((d.data / data.reduce((a, b) => a + b, 0)) * 100)}%`
