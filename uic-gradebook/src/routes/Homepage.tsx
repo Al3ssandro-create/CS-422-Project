@@ -28,8 +28,7 @@ function Homepage() {
           height: "100%",
           backgroundColor: "white",
           paddingTop: "4%",
-          paddingBottom: "4%",
-          marginBottom: "5vh"
+          paddingBottom: "4%"
         }}
       >
         <Box>
