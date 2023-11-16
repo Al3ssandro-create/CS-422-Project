@@ -6,6 +6,8 @@ import "../styles/css/header.css";
 import styled from "styled-components";
 
 const StyledNavBar = styled(Navbar)`
+    position: fixed;
+    top: 0;
     background-color: #9e2d32;
     min-height: 10vh;
     width: 100%;
