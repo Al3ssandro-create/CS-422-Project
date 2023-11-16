@@ -30,9 +30,10 @@ function D3PieChart({ data }: { data: Array<number> }) {
       .attr("alignment-baseline", "middle")
       .style("font-size", "3vh")
       .text(
-        (d) =>
-          `${Math.round((d.data / data.reduce((a, b) => a + b, 0)) * 100)}%`
-      );
+        (d) => {
+          const percentage = Math.round((d.data / data.reduce((a, b) => a + b, 0)) * 100);
+          return percentage !== 0 ? `${percentage}%` : '';
+        });
     const tooltip = select("#reference")
       .append("div")
       .attr("class", "tooltip")
