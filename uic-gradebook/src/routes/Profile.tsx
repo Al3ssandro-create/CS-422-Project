@@ -101,7 +101,7 @@ const ProfilePage = () => {
 
         <div
           style={{
-            marginTop: "200px",
+            marginTop: "20%",
             display: "flex",
             justifyContent: "center",
           }}
