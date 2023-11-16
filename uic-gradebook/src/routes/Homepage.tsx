@@ -33,6 +33,7 @@ function Homepage() {
         }}
       >
         <Box>
+          <div id="reference" style={{width:"100%"}}>
           {courses.map((item, index) => (
             <div
               onClick={() => navigate(`course/${item.name}`)}
@@ -47,6 +48,7 @@ function Homepage() {
               />
             </div>
           ))}
+          </div>
         </Box>
       </div>
     </>

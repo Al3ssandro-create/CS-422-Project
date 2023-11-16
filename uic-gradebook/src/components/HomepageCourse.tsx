@@ -33,7 +33,7 @@ function D3PieChart({ data }: { data: Array<number> }) {
         (d) =>
           `${Math.round((d.data / data.reduce((a, b) => a + b, 0)) * 100)}%`
       );
-    const tooltip = select("body")
+    const tooltip = select("#reference")
       .append("div")
       .attr("class", "tooltip")
       .style("opacity", 0)
@@ -70,26 +70,6 @@ function D3PieChart({ data }: { data: Array<number> }) {
       .on("mouseout", (d) => {
         tooltip.transition().duration(500).style("opacity", 0);
             });
-
-    // const legend = svg
-    //   .append("g")
-    //   .attr("transform", "translate(220, -100)")
-    //   .selectAll("g")
-    //   .data(color)
-    //   .join("g");
-
-    // legend
-    //   .append("rect")
-    //   .attr("width", 20)
-    //   .attr("height", 20)
-    //   .attr("fill", (d, i) => color[i])
-    //   .attr("y", (d, i) => i * 50);
-
-    // legend
-    //   .append("text")
-    //   .attr("x", 25)
-    //   .attr("y",  (d, i) => i * 50 + 17)
-    //   .text((d, i) => labels[i]);
   }, [data]);
 
   return <svg style={{ padding: "1%" }} ref={ref}></svg>;
