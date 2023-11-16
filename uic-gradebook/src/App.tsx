@@ -12,7 +12,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <Header />
-      <div style={{minHeight: "100vh", marginTop: "10vh"}}>
+      <div style={{minHeight: "85vh", marginTop: "10vh"}}>
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="course/:courseName" element={<Course />} />
