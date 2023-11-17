@@ -2,12 +2,13 @@ import { Card } from "@nextui-org/react";
 import { select, pie, arc, PieArcDatum } from "d3";
 import { useEffect, useRef } from "react";
 function D3PieChart({ data }: { data: Array<number> }) {
+  console.log(data);
   const ref = useRef(null);
   const color = ["#2CE574", "#CDF03A", "#FFE500", "#FF9600", "#FF3924"];
   const labels = ["A", "B", "C", "D", "F"];
   useEffect(() => {
     const svg = select(ref.current);
-    const pieGenerator = pie();
+    const pieGenerator = pie().value((d) => d as number).sort(null);
     const arcGenerator = arc<PieArcDatum<number>>()
       .innerRadius(0)
       .outerRadius(Math.min(400, 400) / 2);
@@ -28,7 +29,7 @@ function D3PieChart({ data }: { data: Array<number> }) {
       .attr("transform", (d) => `translate(${arcGenerator.centroid(d as any)})`)
       .attr("text-anchor", "middle")
       .attr("alignment-baseline", "middle")
-      .style("font-size", "3vh")
+      .style("font-size", "2.5vh")
       .text(
         (d) => {
           const percentage = Math.round((d.data / data.reduce((a, b) => a + b, 0)) * 100);
