@@ -74,6 +74,96 @@ const initialize = () => {
   );
 };
 
+const query_courses_by_instructor_name = (department, query) => {
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT DISTINCT id, department, number, name, instructor FROM courses WHERE department = ? AND (instructor LIKE ? OR name LIKE ?)`,
+      [department, `%${query}%`, `%${query}%`],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(rows);
+      }
+    );
+  });
+};
+
+const query_courses_by_instructor_name_all = (query) => {
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT DISTINCT id, department, number, name, instructor FROM courses WHERE instructor LIKE ? OR name LIKE ?`,
+      [`%${query}%`, `%${query}%`],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(rows);
+      }
+    );
+  });
+};
+
+const query_courses_by_code = (department, query) => {
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT * FROM courses WHERE department = ? AND number LIKE ?`,
+      [department, `${query}%`],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(rows);
+      }
+    );
+  });
+};
+
+const query_courses_by_code_all = (query) => {
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT * FROM courses WHERE number LIKE ?`,
+      [`${query}%`],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(rows);
+      }
+    );
+  });
+};
+
+const query_users_with_status = (userId, query) => {
+  return new Promise((resolve, reject) => {
+    const likeQuery = `%${query}%`;
+    db.all(
+      `SELECT 
+          users.id, 
+          users.name, 
+          users.surname,
+          CASE 
+              WHEN friends.status IS NULL THEN 'None'
+              ELSE friends.status 
+          END AS friendship_status
+       FROM users
+       LEFT JOIN friends ON (users.id = friends.to_user AND friends.from_user = ?) OR (users.id = friends.from_user AND friends.to_user = ?)
+       WHERE (users.id != ?) AND (users.name LIKE ? OR users.surname LIKE ?)`,
+      [userId, userId, userId, likeQuery, likeQuery],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      }
+    );
+  });
+};
+
+
 const get_user_by_email = (email) => {
   return new Promise((resolve, reject) => {
     db.get(`SELECT * FROM users WHERE email = ?`, [email], (err, row) => {
@@ -100,7 +190,7 @@ const get_fav_courses = (id) => {
   });
 };
 
-const get_courses_by_name = (userId, course) => {
+const get_courses_by_code = (userId, course) => {
   return new Promise((resolve, reject) => {
     db.all(
       `SELECT courses.*, (favCourses.user IS NOT NULL) AS isFav 
@@ -118,7 +208,6 @@ const get_courses_by_name = (userId, course) => {
     );
   });
 };
-
 
 const add_fav_course = (id, course) => {
   return new Promise((resolve, reject) => {
@@ -385,5 +474,10 @@ module.exports = {
   add_friend,
   remove_friend,
   accept_friend,
-  get_courses_by_name
+  get_courses_by_code,
+  query_courses_by_code,
+  query_courses_by_code_all,
+  query_courses_by_instructor_name,
+  query_courses_by_instructor_name_all,
+  query_users_with_status
 };
