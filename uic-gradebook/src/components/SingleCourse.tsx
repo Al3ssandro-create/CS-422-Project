@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {Card, CardHeader, CardBody} from "@nextui-org/react";
-import { FaStar } from "react-icons/fa";
+import { FaStar,FaRegStar } from "react-icons/fa";
 import { Class, Distribution } from "../types/types";
 import * as d3 from "d3";
 import { addFavorite, removeFavorite } from "../api/server";
@@ -64,7 +64,7 @@ function SingleCourse({ course, userGrade, fav, userId }: CourseCardProps) {
               <div></div>
               <h3 style={{fontSize:"3.5vw"}}>{course.semester} {course.name}</h3>
               <div onClick={handleStarClick}>
-                  <FaStar style={{fontSize:"3.5vw"}}color={starFilled ? "black" : "gray"} />
+                  {starFilled? <FaStar style={{fontSize:"3.5vw"}}color={"black" }/>:<FaRegStar  style={{fontSize:"3.5vw"}}/>}
               </div>   
           </CardHeader>
           <CardBody className="px-4" >
