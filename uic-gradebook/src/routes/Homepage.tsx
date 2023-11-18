@@ -15,6 +15,7 @@ function Homepage() {
   }, []);
 
   useEffect(() => {
+    console.log(userId);
     getFavCourses(userId as number).then((courses) => setCourses(courses));
   }, [userId]);
 

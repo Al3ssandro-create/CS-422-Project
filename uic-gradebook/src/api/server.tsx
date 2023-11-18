@@ -1,289 +1,223 @@
 import {
   Class,
   User,
-  Friend,
   FriendStatus,
   DisplayFriend,
   DisplayClass,
 } from "../types/types";
-import _users from "./users.json";
-import _classes from "./classes.json";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function transformAndValidateUsers(rawData: any[]): User[] {
-  return rawData.map((user) => {
-    // Validate and transform friends
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const friends: Friend[] = user.friends.map((friend: any) => {
-      // Check if status is either "pending" or "accepted"
-      if (friend.status !== "pending" && friend.status !== "accepted") {
-        throw new Error(`Invalid friend status: ${friend.status}`);
-      }
-      return { id: friend.id, status: friend.status as FriendStatus };
-    });
+import { db_Class, db_Grade, db_User } from "../types/backend";
 
-    // Return a new User object
-    return {
-      id: user.id,
-      name: user.name,
-      surname: user.surname,
-      email: user.email,
-      gpa: user.gpa,
-      favClasses: user.favClasses,
-      friends: friends,
-    };
-  });
+const endpoint = "http://localhost:8080";
+
+function db_user_to_front(_user: db_User): User {
+  return {
+    id: _user.id,
+    name: _user.name,
+    surname: _user.surname,
+    email: _user.email,
+    gpa: _user.gpa,
+  };
 }
 
-const getUsers = async (): Promise<User[]> => {
-  const user = localStorage.getItem("users");
+function db_class_to_front(course: db_Class): Class {
+  return {
+    id: course.id,
+    name: course.name,
+    teacher: course.instructor,
+    semester: course.semester + " " + course.year,
+    code: course.number,
+    department: course.department,
+    distribution: {
+      a: course.a,
+      b: course.b,
+      c: course.c,
+      d: course.d,
+      f: course.f,
+    },
+  };
+}
 
-  if (user === null) {
-    localStorage.setItem("users", JSON.stringify(_users));
-
-    return transformAndValidateUsers(_users);
-  }
-
-  return JSON.parse(user);
-};
-
-const getClasses = async (): Promise<Class[]> => {
-  const classes = localStorage.getItem("classes");
-
-  if (classes === null) {
-    localStorage.setItem("classes", JSON.stringify(_classes));
-    return _classes;
-  }
-
-  return JSON.parse(classes);
-};
+function db_grade_to_front(grade: db_Grade): Class {
+  return {
+    id: grade.id,
+    name: grade.name,
+    teacher: grade.instructor,
+    semester: grade.semester + " " + grade.year,
+    code: grade.number,
+    department: grade.department,
+    isFav: grade.isFav,
+    distribution: {
+      a: grade.a,
+      b: grade.b,
+      c: grade.c,
+      d: grade.d,
+      f: grade.f,
+    },
+  };
+}
 
 export const getUser = async (userId: number): Promise<User | undefined> => {
-  const users = await getUsers();
+  if (userId === undefined) return undefined;
 
-  return users.find((user) => user.id === userId);
+  const res = await fetch(`${endpoint}/api/user/${userId}`);
+
+  if (res.status === 404) return undefined;
+
+  const user = await res.json();
+
+  return db_user_to_front(user);
 };
 
-export const getFavCourses = async (userId: number) => {
-  const user = await getUser(userId);
+export const getFavCourses = async (userId: number): Promise<Class[]> => {
+  if (userId === undefined) return [];
 
-  if (user === undefined) return [];
+  const res = await fetch(`${endpoint}/api/user/${userId}/fav_courses`);
 
-  const classes = await getClasses();
+  if (res.status === 404) return [];
 
-  return classes.filter((course) => user.favClasses.includes(course.id));
+  const favCourses: db_Class[] = await res.json();
+
+  return favCourses.map((course: db_Class) => {
+    return db_class_to_front(course);
+  });
 };
 
 export const getSearchCourses = async (
+  department: string,
   query: string,
   id: number
 ): Promise<{ res: DisplayClass[]; id: number }> => {
   const target = query.toLowerCase();
 
-  const classes = await getClasses();
+  const res = await fetch(`${endpoint}/api/courses/${department}/${target}`);
 
-  const uniqueCourses = new Set();
-
-  const distinctClasses = classes.filter((course) => {
-    const courseNameMatches = course.name.toLowerCase().includes(target);
-    const teacherNameMatches = course.teacher.toLowerCase().includes(target);
-    const serializedCourse = `${course.name}${course.teacher}`
-
-    if (
-      (courseNameMatches || teacherNameMatches) &&
-      !uniqueCourses.has(serializedCourse)
-    ) {
-      uniqueCourses.add(serializedCourse);
-      return true;
-    }
-
-    return false;
-  });
+  const courses: db_Class[] = await res.json();
 
   return {
-    res: distinctClasses,
-    id,
+    res: courses.map((course: db_Class) => {
+      return db_class_to_front(course);
+    }),
+    id: id,
   };
 };
 
-function parseSemester(semester: string) {
-  type SemesterOrder = {
-    [key: string]: number;
-    Spring: number;
-    Summer: number;
-    Fall: number;
-  };
+export const getCourses = async (
+  userId: number,
+  department: string,
+  code: number,
+  instructor: string
+): Promise<Class[]> => {
+  const res = await fetch(
+    `${endpoint}/api/courses/${userId}/${department}/${code}/${instructor}`
+  );
 
-  const order: SemesterOrder = { Spring: 1, Summer: 2, Fall: 3 };
-  const parts = semester.split(" ");
-  return {
-    year: parseInt(parts[1], 10),
-    term: order[parts[0]],
-  };
+  if (res.status === 404) return [];
+
+  const courses: db_Grade[] = await res.json();
+
+  return courses.map((course: db_Grade) => {
+    return db_grade_to_front(course);
+  });
+};
+
+interface db_Friend extends db_User {
+  status: string;
 }
 
-export const getCoursesByName = async (name: string): Promise<Class[]> => {
-  const classes = await getClasses();
-
-  return classes
-    .filter((course) => course.name === name)
-    .sort((a, b) => {
-      const semesterA = parseSemester(a.semester);
-      const semesterB = parseSemester(b.semester);
-
-      if (semesterA.year !== semesterB.year) {
-        return semesterB.year - semesterA.year;
-      } else {
-        return semesterA.term - semesterB.term;
-      }
-    });
-};
-
 export const getFriends = async (userId: number): Promise<DisplayFriend[]> => {
-  const user = await getUser(userId);
+  const res = await fetch(`${endpoint}/api/user/${userId}/friends`);
 
-  if (user === undefined) return [];
+  const friends: db_Friend[] = await res.json();
 
-  const users = await getUsers();
-
-  const friends_id = user.friends.map((friend) => friend.id);
-
-  const friends = users.filter((friend) => friends_id.includes(friend.id));
-
-  return friends.map((friend) => {
-    // The optional chaining operator (?.) ensures that we don't try to call find on undefined or null
-    let status = user.friends?.find((f) => f.id === friend.id)?.status;
-
-    // Using a default value of "pending" if status is undefined
-    status = status ?? "pending";
-
+  return friends.map((friend: db_Friend) => {
     return {
-      ...friend,
-      status,
+      id: friend.id,
+      name: friend.name,
+      surname: friend.surname,
+      status: friend.status as FriendStatus,
     };
   });
 };
 
 export const getSearchFriends = async (
+  userId: number,
   query: string,
   id: number
-): Promise<{ res: User[]; id: number }> => {
-  const target = query.toLowerCase();
+) => {
+  const res = await fetch(`${endpoint}/users/${userId}/${query}`);
 
-  const users = await getUsers();
+  const friends = await res.json();
 
   return {
-    res: users.filter((user) =>
-      (user.name + user.surname).toLowerCase().includes(target)
-    ),
+    res: friends.map((friend: db_Friend) => {
+      return {
+        id: friend.id,
+        name: friend.name,
+        surname: friend.surname,
+        status: friend.status as FriendStatus,
+      };
+    }),
     id,
   };
 };
 
 export const addFriend = async (userId: number, friendId: number) => {
-  const users = await getUsers();
-
-  const updatedUsers = users.map((u) => {
-    if (u.id === userId) {
-      // Clone the user and update the friends array
-      return {
-        ...u,
-        friends: [...u.friends, { id: friendId, status: "requested" }],
-      };
-    } else if (u.id === friendId) {
-      // Clone the friend and update the friends array
-      return {
-        ...u,
-        friends: [...u.friends, { id: userId, status: "pending" }],
-      };
-    }
-    return u; // Return the unchanged user
+  const res = await fetch(`${endpoint}/api/user/${userId}/${friendId}`, {
+    method: "POST",
+    body: JSON.stringify({
+      friendId,
+    }),
   });
 
-  // Save the updated users array to localStorage
-  localStorage.setItem("users", JSON.stringify(updatedUsers));
+  console.log(await res.json());
 };
 
 export const removeFriend = async (userId: number, friendId: number) => {
-  const users = await getUsers();
-
-  const updatedUsers = users.map((u) => {
-    if (u.id === userId) {
-      // Clone the user and update the friends array
-      return {
-        ...u,
-        friends: u.friends.filter((f) => f.id !== friendId),
-      };
-    } else if (u.id === friendId) {
-      // Clone the friend and update the friends array
-      return {
-        ...u,
-        friends: u.friends.filter((f) => f.id !== userId),
-      };
-    }
-    return u; // Return the unchanged user
+  const res = await fetch(`${endpoint}/api/user/${userId}/${friendId}`, {
+    method: "DELETE",
+    body: JSON.stringify({
+      friendId,
+    }),
   });
 
-  // Save the updated users array to localStorage
-  localStorage.setItem("users", JSON.stringify(updatedUsers));
+  console.log(await res.json());
 };
 
 export const acceptFriend = async (userId: number, friendId: number) => {
-  const users = await getUsers();
-
-  const updatedUsers = users.map((u) => {
-    if (u.id === userId) {
-      // Clone the user and update the friends array
-      return {
-        ...u,
-        friends: u.friends.map((f) => {
-          if (f.id === friendId) {
-            return { ...f, status: "accepted" };
-          }
-          return f;
-        }),
-      };
-    } else if (u.id === friendId) {
-      // Clone the friend and update the friends array
-      return {
-        ...u,
-        friends: u.friends.map((f) => {
-          if (f.id === userId) {
-            return { ...f, status: "accepted" };
-          }
-          return f;
-        }),
-      };
-    }
-    return u; // Return the unchanged user
+  const res = await fetch(`${endpoint}/api/user/${userId}/${friendId}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      friendId,
+    }),
   });
 
-  // Save the updated users array to localStorage
-  localStorage.setItem("users", JSON.stringify(updatedUsers));
+  console.log(await res.json());
 };
 
 export const addFavorite = async (userId: number, courseId: number) => {
-  const users = await getUsers();
+  const res = await fetch(`${endpoint}/users/${userId}/favClasses/${courseId}`, {
+    method: "POST",
+    body: JSON.stringify({
+      courseId,
+    }),
+  });
 
-  const updatedUsers = users.map((u) =>
-    u.id === userId ? { ...u, favClasses: [...u.favClasses, courseId] } : u
-  );
-
-  localStorage.setItem("users", JSON.stringify(updatedUsers));
+  console.log(await res.json());
 };
 
 export const removeFavorite = async (userId: number, courseId: number) => {
-  const users = await getUsers();
+  const res = await fetch(`${endpoint}/users/${userId}/favClasses/${courseId}`, {
+    method: "DELETE",
+    body: JSON.stringify({
+      courseId,
+    }),
+  });
 
-  const updatedUsers = users.map((u) =>
-    u.id === userId
-      ? { ...u, favClasses: u.favClasses.filter((c) => c !== courseId) }
-      : u
-  );
-
-  localStorage.setItem("users", JSON.stringify(updatedUsers));
+  console.log(await res.json());
 };
 
+// ID for user: User Study
 export const getUserId = async () => {
-  return 1
+  return 3;
 };

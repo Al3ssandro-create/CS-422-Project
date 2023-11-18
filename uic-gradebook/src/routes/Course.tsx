@@ -3,7 +3,7 @@ import Box from "../components/Box";
 import SingleCourse from "../components/SingleCourse";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getCoursesByName, getUser, getUserId } from "../api/server";
+import { getCourses, getUserId } from "../api/server";
 
 function Course() {
   const [courses, setCourses] = useState<Class[]>([]);
@@ -15,13 +15,7 @@ function Course() {
     const obtainCourses = async () => {
       const id = await getUserId();
 
-      const user = await getUser(id);
-
-      if (user) {
-        setFav(user.favClasses);
-      }
-
-      const courses = await getCoursesByName(courseName as string);
+      const courses: Class[] = await getCourses(id, "MATH", 313, "Shvydkoy, Roman");
 
       setCourses(courses);
       setUserId(id);
@@ -38,7 +32,7 @@ function Course() {
             <SingleCourse
               key={course.id + course.semester}
               course={course}
-              fav={fav.includes(course.id)}
+              fav={course.isFav ?? false}
               userId={userId}
             />
           ))}
