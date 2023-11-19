@@ -1,15 +1,15 @@
 import { Card, CardHeader } from "@nextui-org/card";
 import { useNavigate } from "react-router-dom";
-import { DisplayClass } from "../types/types";
+import { Class } from "../types/types";
 
-function CourseCard({ course }: { course: DisplayClass }) {
+function CourseCard({ course }: { course: Class }) {
   const navigate = useNavigate();
 
   return (
     <>
       <div
         onClick={() => {
-          navigate(`/course/${course.name}`);
+          navigate(`/course/${course.department}/${course.code}/${course.teacher}`);
         }}
       >
         <Card shadow="lg" style={{ marginTop: "1%", marginBottom: "1%" }} fullWidth>

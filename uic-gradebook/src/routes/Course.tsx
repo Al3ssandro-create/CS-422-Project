@@ -8,13 +8,16 @@ import { getCourses, getUserId } from "../api/server";
 function Course() {
   const [courses, setCourses] = useState<Class[]>([]);
   const [userId, setUserId] = useState<number>();
-  const { courseName } = useParams();
+  const { department, code, instructor } = useParams();
 
   useEffect(() => {
     const obtainCourses = async () => {
-      const id = await getUserId();
+      // const id = await getUserId();
+      const id = 3;
 
-      const courses: Class[] = await getCourses(id, "MATH", 313, "Shvydkoy, Roman");
+      if ( department === undefined || code === undefined || instructor === undefined) return;
+
+      const courses: Class[] = await getCourses(id, department, parseInt(code), instructor);
 
       setCourses(courses);
       setUserId(id);

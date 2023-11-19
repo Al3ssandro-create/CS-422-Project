@@ -14,8 +14,7 @@ function SearchList() {
   const searchCourses = async (query: string, sid: number) => {
     if (query === "") {
       setResults([]);
-    }
-    else {
+    } else {
       const { res, id } = await getSearchCourses("CS", query, sid);
 
       if (id === sid) {
@@ -47,10 +46,12 @@ function SearchList() {
         {results.map((course: Class) => {
           return (
             <>
-            <div key={course.name + course.teacher} style={{ width: "100%" }}>
-              <CourseCard course={course} />
-            </div></>
-        )})}
+              <div key={course.name + course.teacher} style={{ width: "100%" }}>
+                <CourseCard course={course} />
+              </div>
+            </>
+          );
+        })}
       </Box>
     </>
   );
