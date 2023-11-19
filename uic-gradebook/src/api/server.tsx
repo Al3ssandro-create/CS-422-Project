@@ -56,7 +56,7 @@ function db_grade_to_front(grade: db_Grade): Class {
   };
 }
 
-export const getUser = async (userId: number): Promise<User | undefined> => {
+export const getUser = async (userId: string): Promise<User | undefined> => {
   if (userId === undefined) return undefined;
 
   const res = await fetch(`${endpoint}/api/user/${userId}`);
@@ -64,8 +64,6 @@ export const getUser = async (userId: number): Promise<User | undefined> => {
   if (res.status === 404) return undefined;
 
   const user = await res.json();
-
-  console.log(user);
 
   return db_user_to_front(user);
 };
@@ -220,5 +218,5 @@ export const removeFavorite = async (userId: number, courseId: number) => {
 
 // ID for user: User Study
 export const getUserId = async () => {
-  return 3;
+  return "user.study@uic.edu";
 };

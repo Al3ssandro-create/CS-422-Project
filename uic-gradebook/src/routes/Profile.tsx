@@ -14,17 +14,15 @@ const ProfilePage = () => {
     gpa: 0,
   } as User);
 
-  const [userId, setUserId] = useState<number>();
+  const [userId, setUserId] = useState<string>();
 
   useEffect(() => {
     getUserId().then((id) => setUserId(id));
   }, []);
 
   useEffect(() => {
-    console.log(userId);
-    getUser(userId as number).then((user) => {
-      console.log(user);
-      if (user) setUser(user)
+    getUser(userId as string).then((user) => {
+      if (user) setUser(user);
     });
   }, [userId]);
 
@@ -89,7 +87,7 @@ const ProfilePage = () => {
                 paddingTop: "4%",
               }}
             >
-              <h1>{user!.name}</h1>
+              <h1>{user.name} {user.surname}</h1>
               <div
                 style={{
                   color: "black",
@@ -97,6 +95,7 @@ const ProfilePage = () => {
                   fontSize: "20px",
                 }}
               >
+                <p>{user!.email}</p>
                 <p>GPA: {user!.gpa}</p>
               </div>
             </div>
@@ -112,12 +111,18 @@ const ProfilePage = () => {
         >
           <div className="profile-button">
             <div style={{ marginBottom: "10px", width: "100px" }}>
-              <Button style={buttonStyle} onClick={async () => handleDeleteAccount()}>
+              <Button
+                style={buttonStyle}
+                onClick={async () => handleDeleteAccount()}
+              >
                 Delete Account
               </Button>
             </div>
             <div style={{ marginBottom: "10px", width: "auto" }}>
-              <Button style={buttonStyle} onClick={async () => handleChangePassword()}>
+              <Button
+                style={buttonStyle}
+                onClick={async () => handleChangePassword()}
+              >
                 Change Password
               </Button>
             </div>
