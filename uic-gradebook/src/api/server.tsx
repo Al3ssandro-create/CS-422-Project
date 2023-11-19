@@ -2,8 +2,7 @@ import {
   Class,
   User,
   FriendStatus,
-  DisplayFriend,
-  DisplayClass,
+  DisplayFriend
 } from "../types/types";
 
 import { db_Class, db_Grade, db_User } from "../types/backend";
@@ -66,6 +65,8 @@ export const getUser = async (userId: number): Promise<User | undefined> => {
 
   const user = await res.json();
 
+  console.log(user);
+
   return db_user_to_front(user);
 };
 
@@ -87,7 +88,7 @@ export const getSearchCourses = async (
   department: string,
   query: string,
   id: number
-): Promise<{ res: DisplayClass[]; id: number }> => {
+): Promise<{ res: Class[]; id: number }> => {
   const target = query.toLowerCase();
 
   const res = await fetch(`${endpoint}/api/courses/${department}/${target}`);
@@ -98,7 +99,7 @@ export const getSearchCourses = async (
     res: courses.map((course: db_Class) => {
       return db_class_to_front(course);
     }),
-    id: id,
+    id,
   };
 };
 

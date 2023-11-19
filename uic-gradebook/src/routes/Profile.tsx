@@ -21,7 +21,11 @@ const ProfilePage = () => {
   }, []);
 
   useEffect(() => {
-    getUser(userId as number).then((user) => {if (user) setUser(user)});
+    console.log(userId);
+    getUser(userId as number).then((user) => {
+      console.log(user);
+      if (user) setUser(user)
+    });
   }, [userId]);
 
   // handle Delete acc

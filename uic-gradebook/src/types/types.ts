@@ -33,11 +33,6 @@ export interface Class {
   isFav?: boolean;
 }
 
-export interface DisplayClass {
-  name: string;
-  teacher: string;
-}
-
 export interface Distribution {
   a: number;
   b: number;

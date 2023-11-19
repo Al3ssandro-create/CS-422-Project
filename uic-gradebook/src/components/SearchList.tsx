@@ -1,28 +1,29 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@nextui-org/react";
 import Box from "./Box";
 import CourseCard from "./CourseCard";
 import { SearchIcon } from "@primer/octicons-react";
-import { DisplayClass } from "../types/types";
+import { Class } from "../types/types";
 import { getSearchCourses } from "../api/server";
 
 function SearchList() {
   const [search, setSearch] = useState("");
   const [searchId, setId] = useState(0);
-  const [results, setResults] = useState<DisplayClass[]>([]);
+  const [results, setResults] = useState<Class[]>([]);
 
-  useEffect(() => {
-    const searchCourses = async () => {
-      if (search == "") return 
-      const { res, id } = await getSearchCourses(search, searchId);
+  const searchCourses = async (query: string, sid: number) => {
+    if (query === "") {
+      setResults([]);
+    }
+    else {
+      const { res, id } = await getSearchCourses("CS", query, sid);
 
-      if (id == searchId) {
+      if (id === sid) {
+        console.log(res);
         setResults(res);
       }
-    };
-
-    searchCourses();
-  }, [search, searchId]);
+    }
+  };
 
   return (
     <>
@@ -32,20 +33,24 @@ function SearchList() {
           fullWidth
           radius="full"
           placeholder="The course or teacher"
-          startContent={<SearchIcon size={24}/>}
+          startContent={<SearchIcon size={24} />}
           value={search}
           onChange={(e) => {
+            searchCourses(e.target.value.trim(), searchId + 1);
+
             setId(searchId + 1);
-            setSearch(e.target.value.trimStart());
+            setSearch(e.target.value.trim());
           }}
         />
       </div>
       <Box>
-        {results.map((course: DisplayClass) => (
-          <div key={course.name} style={{width: "100%"}}>
-            <CourseCard course={course} />
-          </div>
-        ))}
+        {results.map((course: Class) => {
+          return (
+            <>
+            <div key={course.name + course.teacher} style={{ width: "100%" }}>
+              <CourseCard course={course} />
+            </div></>
+        )})}
       </Box>
     </>
   );

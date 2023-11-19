@@ -7,7 +7,6 @@ import { getCourses, getUserId } from "../api/server";
 
 function Course() {
   const [courses, setCourses] = useState<Class[]>([]);
-  const [fav, setFav] = useState<number[]>([]);
   const [userId, setUserId] = useState<number>();
   const { courseName } = useParams();
 
