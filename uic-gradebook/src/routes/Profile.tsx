@@ -1,31 +1,9 @@
-import { useEffect, useState } from "react";
 import { Button, Image } from "@nextui-org/react";
 import Box from "../components/Box";
 import { User } from "../types/types";
-import { getUser, getUserId } from "../api/server";
 import { FeedPersonIcon } from "@primer/octicons-react";
 
-const ProfilePage = () => {
-  const [user, setUser] = useState<User>({
-    id: 1,
-    name: "",
-    surname: "",
-    email: "",
-    gpa: 0,
-  } as User);
-
-  const [userId, setUserId] = useState<string>();
-
-  useEffect(() => {
-    getUserId().then((id) => setUserId(id));
-  }, []);
-
-  useEffect(() => {
-    getUser(userId as string).then((user) => {
-      if (user) setUser(user);
-    });
-  }, [userId]);
-
+const ProfilePage = ({user}: {user: User}) => {
   // handle Delete acc
   const handleDeleteAccount = async () => {
     // for future use

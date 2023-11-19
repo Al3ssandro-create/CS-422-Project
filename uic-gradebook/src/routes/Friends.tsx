@@ -7,7 +7,7 @@ import {
 } from "@primer/octicons-react";
 import Box from "../components/Box";
 import { Button, Card, CardBody } from "@nextui-org/react";
-import { acceptFriend, addFriend, getFriends, getSearchFriends, getUserId, removeFriend } from "../api/server";
+import { acceptFriend, addFriend, getFriends, getSearchFriends, removeFriend } from "../api/server";
 import { DisplayFriend, User } from "../types/types";
 
 // FriendActions component to handle the follow and pending actions
@@ -33,7 +33,7 @@ const FriendActions = ({
       );
     }
     return <></>;
-  } else if (friend?.status === "pending") {
+  } else if (friend?.status === "requested") {
     return (
       <div
         style={{
@@ -128,25 +128,20 @@ const FriendItem = ({
   );
 };
 
-function Friends() {
+function Friends({user}: {user: User}) {
   const [searchString, setSearchString] = useState("");
   const [showFriends, setShow] = useState(true);
   const [friends, setFriends] = useState<DisplayFriend[]>([]);
-  const [searchRes, setSearchRes] = useState<User[]>([]);
-
-  const [userId, setUserId] = useState<number>();
-
-  useEffect(() => {
-    getUserId().then((id) => setUserId(id));
-  }, []);
+  const [searchRes, setSearchRes] = useState<DisplayFriend[]>([]);
 
   useEffect(() => {
     const fetchFriends = async () => {
-      const friendsData = await getFriends(userId as number);
+      const friendsData = await getFriends(user.id);
       setFriends(friendsData);
     };
+    
     fetchFriends();
-  }, [userId]);
+  }, [user]);
 
   useEffect(() => {
     if (friends.length === 0) setShow(false);
@@ -159,43 +154,28 @@ function Friends() {
         setShow(true);
       } else {
         setShow(false);
-        const searchResults = await getSearchFriends(searchString, 0);
-        const filteredResults = searchResults.res.filter(
-          (user) => !friends.find((friend) => friend.id === user.id)
-        );
-        setSearchRes(filteredResults);
+        const {res, id} = await getSearchFriends(user.id, searchString, 0);
+        
+        if (id === 0)
+          setSearchRes(res);
       }
     };
+
     fetchSearchResults();
   }, [searchString, friends]);
 
   // follow, accept, refuse, unlink
   const onLinkReqClick = (friend: DisplayFriend, op: string) => {
-    console.log(friend, op);
-
     if (op == "accept") {
-      acceptFriend(userId as number, friend.id)
-      setFriends((prev) =>
-        prev.map((f) => (f.id === friend.id ? { ...f, status: "accepted" } : f))
-      );
+      acceptFriend(user.id, friend.id)
     } else if (op == "refuse") {
-      removeFriend(userId as number, friend.id)
-      setFriends((prev) =>
-        prev.filter((f) => (f.id !== friend.id))
-      );
+      removeFriend(user.id, friend.id)
     } else if (op == "follow") {
-      addFriend(userId as number, friend.id)
-      setFriends((prev) => [...prev, { ...friend, status: "requested" }]);
+      addFriend(user.id, friend.id)
     } else if (op == "unlink") {
-      removeFriend(userId as number, friend.id)
-      setFriends((prev) => prev.filter((f) => f.id !== friend.id));
+      removeFriend(user.id, friend.id)
     }
   };
-  // Function to handle friend request acceptance or denial
-  // Uncomment and complete this function as needed
-  // const onLinkReqClick = (friendId, isAccept) => {
-  //   // Implement friend request logic here
-  // };
 
   return (
     <Box>
@@ -223,10 +203,10 @@ function Friends() {
             </>
           ) : (
             <div>
-              {searchRes?.map((user) => (
+              {searchRes?.map((friend) => (
                 <FriendItem
-                  key={user.id}
-                  friend={user as DisplayFriend}
+                  key={friend.id}
+                  friend={friend}
                   showFriends={showFriends}
                   onLinkReqClick={onLinkReqClick}
                 />
