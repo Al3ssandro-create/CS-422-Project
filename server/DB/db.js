@@ -109,7 +109,7 @@ const query_courses_by_instructor_name_all = (query) => {
 const query_courses_by_code = (department, query) => {
   return new Promise((resolve, reject) => {
     db.all(
-      `SELECT DISTINCT * FROM courses WHERE department = ? AND number LIKE ? LIMIT 10`,
+      `SELECT DISTINCT id, department, number, name, instructor FROM courses WHERE department = ? AND number LIKE ? LIMIT 10`,
       [department, `${query}%`],
       (err, rows) => {
         if (err) {
@@ -124,7 +124,7 @@ const query_courses_by_code = (department, query) => {
 const query_courses_by_code_all = (query) => {
   return new Promise((resolve, reject) => {
     db.all(
-      `SELECT DISTINCT * FROM courses WHERE number LIKE ? LIMIT 10`,
+      `SELECT DISTINCT id, department, number, name, instructor FROM courses WHERE number LIKE ? LIMIT 10`,
       [`${query}%`],
       (err, rows) => {
         if (err) {
