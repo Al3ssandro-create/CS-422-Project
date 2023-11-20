@@ -20,18 +20,33 @@ const FriendActions = ({
   showFriends: boolean;
   onLinkReqClick: (f: DisplayFriend, op: string) => void;
 }) => {
-  console.log(friend.name, friend.status);
-  if (friend.status === "none") {
+  const [displayFriend, setDisplayFriend] = useState<DisplayFriend>(friend);
+
+  const updateDisplayFriend = (action: string) => {
+    onLinkReqClick(friend, action)
+
+    if (action === "follow") {
+      setDisplayFriend({...displayFriend, status: "pending"})
+    } else if (action === "unlink") {
+      setDisplayFriend({...displayFriend, status: "none"})
+    } else if (action === "accept") {
+      setDisplayFriend({...displayFriend, status: "accepted"})
+    } else if (action === "refuse") {
+      setDisplayFriend({...displayFriend, status: "none"})
+    }
+  }
+
+  if (displayFriend.status === "none") {
       return (
         <Button
           className="follow-button"
           disableRipple
-          onClick={() => onLinkReqClick(friend, "follow")}
+          onClick={() => updateDisplayFriend("follow")}
         >
           Follow
         </Button>
       );
-  } else if (friend?.status === "requested") {
+  } else if (displayFriend.status === "requested") {
     return (
       <div
         style={{
@@ -40,30 +55,38 @@ const FriendActions = ({
           width: "100%",
         }}
       >
-        <div onClick={() => onLinkReqClick(friend, "refuse")}>
+        <div onClick={() => updateDisplayFriend("refuse")}>
           <div style={{color: "red"}}>
           <XCircleIcon size={24}/>
           </div>
         </div>
-        <div onClick={() => onLinkReqClick(friend, "accept")}>
+        <div onClick={() => updateDisplayFriend("accept")}>
           <div style={{color: "green"}}>
           <CheckCircleIcon size={24}/>
           </div>
         </div>
       </div>
     );
-  } else if (friend?.status === "accepted") {
+  } else if (displayFriend.status === "accepted") {
     return (
       <Button
         className="follow-button"
         disableRipple
-        onClick={() => onLinkReqClick(friend, "unlink")}
+        onClick={() => updateDisplayFriend("unlink")}
       >
         Unlink
       </Button>
     );
   }
-  return <div>Pending</div>;
+  return (
+    <Button
+      className="follow-button"
+      disableRipple
+      onClick={() => updateDisplayFriend("refuse")}
+    >
+      Pending
+    </Button>
+  );
 };
 
 // FriendItem component to avoid repeating JSX
@@ -133,13 +156,13 @@ function Friends({user}: {user: User}) {
   const [friends, setFriends] = useState<DisplayFriend[]>([]);
   const [searchRes, setSearchRes] = useState<DisplayFriend[]>([]);
 
-  useEffect(() => {
-    const fetchFriends = async () => {
-      const friendsData = await getFriends(user.id);
-    
-      setFriends(friendsData);
-    };
+  const fetchFriends = async () => {
+    const friendsData = await getFriends(user.id);
+  
+    setFriends(friendsData);
+  };
 
+  useEffect(() => {
     fetchFriends();
   }, [user]);
 
@@ -173,7 +196,7 @@ function Friends({user}: {user: User}) {
 
   // follow, accept, refuse, unlink
   const onLinkReqClick = (friend: DisplayFriend, op: string) => {
-    console.log(friend, op); return;
+    
     if (op == "accept") {
       acceptFriend(user.id, friend.id)
     } else if (op == "refuse") {
@@ -183,6 +206,8 @@ function Friends({user}: {user: User}) {
     } else if (op == "unlink") {
       removeFriend(user.id, friend.id)
     }
+
+    fetchFriends();
   };
 
   return (

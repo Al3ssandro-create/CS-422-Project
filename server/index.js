@@ -69,13 +69,15 @@ app.get(
   }
 );
 
-app.post("/api/user/:id/fav_courses", async (req, res) => {
-  const course = await add_fav_course(req.params.id, req.body.courseId);
+app.post("/api/user/:id/fav_courses/:courseId", async (req, res) => {
+  console.log(req.params);
+  const course = await add_fav_course(req.params.id, req.params.courseId);
   res.json(course);
 });
 
-app.delete("/api/user/:id/fav_courses", async (req, res) => {
-  const course = await remove_fav_course(req.params.id, req.body.courseId);
+app.delete("/api/user/:id/fav_courses/:courseId", async (req, res) => {
+  console.log(req.params);
+  const course = await remove_fav_course(req.params.id, req.params.courseId);
   res.json(course);
 });
 
@@ -84,18 +86,19 @@ app.get("/api/user/:id/friends", async (req, res) => {
   res.json(friends);
 });
 
-app.post("/api/user/:id/friends", async (req, res) => {
-  const friend = await add_friend(req.params.id, req.body.friendId);
+app.post("/api/user/:id/friends/:friendId", async (req, res) => {
+  const friend = await add_friend(req.params.id, req.params.friendId);
   res.json(friend);
 });
 
-app.delete("/api/user/:id/friends", async (req, res) => {
-  const friend = await remove_friend(req.params.id, req.body.friendId);
+app.delete("/api/user/:id/friends/:friendId", async (req, res) => {
+  const friend = await remove_friend(req.params.id, req.params.friendId);
   res.json(friend);
 });
 
-app.put("/api/user/:id/friends", async (req, res) => {
-  const friend = await accept_friend(req.params.id, req.body);
+app.put("/api/user/:id/friends/:friendId", async (req, res) => {
+  console.log(req.body)
+  const friend = await accept_friend(req.params.id, req.params.friendId);
   res.json(friend);
 });
 

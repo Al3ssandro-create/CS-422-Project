@@ -140,16 +140,23 @@ const query_users_with_status = (userId, query) => {
   return new Promise((resolve, reject) => {
     const likeQuery = `%${query}%`; // Make sure to set 'searchQuery' to the user's input
     db.all(
-      `SELECT 'to' AS f, u.id, u.name, u.surname, friends.status FROM friends
-      JOIN users AS u ON friends.to_user = u.id
-      WHERE friends.from_user = ? AND (u.name LIKE ? OR u.surname LIKE ?)
-
-      UNION
-
-      SELECT 'from' AS f, u.id, u.name, u.surname, friends.status FROM friends
-      JOIN users AS u ON friends.from_user = u.id
-      WHERE friends.to_user = ? AND (u.name LIKE ? OR u.surname LIKE ?)`,
-      [userId, likeQuery, likeQuery, userId, likeQuery, likeQuery],
+        `SELECT 
+        u.id, 
+        u.name, 
+        u.surname,
+        CASE 
+            WHEN friend.status IS NULL THEN 'None'
+            ELSE friend.status 
+        END AS status,
+        friend.f
+        FROM users AS u
+        LEFT JOIN (
+            SELECT 'to' AS f, to_user AS user_id, from_user, status FROM friends WHERE from_user = ?
+            UNION
+            SELECT 'from' AS f, from_user AS user_id, to_user, status FROM friends WHERE to_user = ?
+        ) AS friend ON u.id = friend.user_id
+        WHERE (u.id != ?) AND (u.name LIKE ? OR u.surname LIKE ?)`,
+      [userId, userId, userId, likeQuery, likeQuery],
       (err, rows) => {
         if (err) {
           reject(err);
@@ -507,5 +514,5 @@ module.exports = {
   query_courses_by_code_all,
   query_courses_by_instructor_name,
   query_courses_by_instructor_name_all,
-  query_users_with_status
+  query_users_with_status,
 };

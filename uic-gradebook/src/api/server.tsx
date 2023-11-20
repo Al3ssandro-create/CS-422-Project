@@ -174,10 +174,10 @@ export const getSearchFriends = async (
 };
 
 export const addFriend = async (userId: number, friendId: number) => {
-  const res = await fetch(`${endpoint}/api/user/${userId}/${friendId}`, {
+  const res = await fetch(`${endpoint}/api/user/${userId}/friends/${friendId}`, {
     method: "POST",
     body: JSON.stringify({
-      friendId,
+      "friendId": friendId,
     }),
   });
 
@@ -185,18 +185,15 @@ export const addFriend = async (userId: number, friendId: number) => {
 };
 
 export const removeFriend = async (userId: number, friendId: number) => {
-  const res = await fetch(`${endpoint}/api/user/${userId}/${friendId}`, {
-    method: "DELETE",
-    body: JSON.stringify({
-      friendId,
-    }),
+  const res = await fetch(`${endpoint}/api/user/${userId}/friends/${friendId}`, {
+    method: "DELETE"
   });
 
   console.log(await res.json());
 };
 
 export const acceptFriend = async (userId: number, friendId: number) => {
-  const res = await fetch(`${endpoint}/api/user/${userId}/${friendId}`, {
+  const res = await fetch(`${endpoint}/api/user/${userId}/friends/${friendId}`, {
     method: "PUT",
     body: JSON.stringify({
       friendId,
@@ -208,12 +205,10 @@ export const acceptFriend = async (userId: number, friendId: number) => {
 
 export const addFavorite = async (userId: number, courseId: number) => {
   const res = await fetch(
-    `${endpoint}/users/${userId}/favClasses/${courseId}`,
+    
+    `${endpoint}/api/user/${userId}/fav_courses/${courseId}`,
     {
-      method: "POST",
-      body: JSON.stringify({
-        courseId,
-      }),
+      method: "POST"
     }
   );
 
@@ -222,12 +217,9 @@ export const addFavorite = async (userId: number, courseId: number) => {
 
 export const removeFavorite = async (userId: number, courseId: number) => {
   const res = await fetch(
-    `${endpoint}/users/${userId}/favClasses/${courseId}`,
+    `${endpoint}/api/user/${userId}/fav_courses/${courseId}`,
     {
-      method: "DELETE",
-      body: JSON.stringify({
-        courseId,
-      }),
+      method: "DELETE"
     }
   );
 
