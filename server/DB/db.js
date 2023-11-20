@@ -77,7 +77,7 @@ const initialize = () => {
 const query_courses_by_instructor_name = (department, query) => {
   return new Promise((resolve, reject) => {
     db.all(
-      `SELECT DISTINCT id, department, number, name, instructor FROM courses WHERE department = ? AND (instructor LIKE ? OR name LIKE ?)`,
+      `SELECT DISTINCT id, department, number, name, instructor FROM courses WHERE department = ? AND (instructor LIKE ? OR name LIKE ?) LIMIT 10`,
       [department, `%${query}%`, `%${query}%`],
       (err, rows) => {
         if (err) {
@@ -93,7 +93,7 @@ const query_courses_by_instructor_name = (department, query) => {
 const query_courses_by_instructor_name_all = (query) => {
   return new Promise((resolve, reject) => {
     db.all(
-      `SELECT DISTINCT id, department, number, name, instructor FROM courses WHERE instructor LIKE ? OR name LIKE ?`,
+      `SELECT DISTINCT id, department, number, name, instructor FROM courses WHERE instructor LIKE ? OR name LIKE ? LIMIT 10`,
       [`%${query}%`, `%${query}%`],
       (err, rows) => {
         if (err) {
@@ -109,7 +109,7 @@ const query_courses_by_instructor_name_all = (query) => {
 const query_courses_by_code = (department, query) => {
   return new Promise((resolve, reject) => {
     db.all(
-      `SELECT * FROM courses WHERE department = ? AND number LIKE ?`,
+      `SELECT DISTINCT * FROM courses WHERE department = ? AND number LIKE ? LIMIT 10`,
       [department, `${query}%`],
       (err, rows) => {
         if (err) {
@@ -124,7 +124,7 @@ const query_courses_by_code = (department, query) => {
 const query_courses_by_code_all = (query) => {
   return new Promise((resolve, reject) => {
     db.all(
-      `SELECT * FROM courses WHERE number LIKE ?`,
+      `SELECT DISTINCT * FROM courses WHERE number LIKE ? LIMIT 10`,
       [`${query}%`],
       (err, rows) => {
         if (err) {
@@ -138,31 +138,38 @@ const query_courses_by_code_all = (query) => {
 
 const query_users_with_status = (userId, query) => {
   return new Promise((resolve, reject) => {
-    const likeQuery = `%${query}%`;
+    const likeQuery = `%${query}%`; // Make sure to set 'searchQuery' to the user's input
     db.all(
-      `SELECT 
-          users.id, 
-          users.name, 
-          users.surname,
-          CASE 
-              WHEN friends.status IS NULL THEN 'None'
-              ELSE friends.status 
-          END AS friendship_status
-       FROM users
-       LEFT JOIN friends ON (users.id = friends.to_user AND friends.from_user = ?) OR (users.id = friends.from_user AND friends.to_user = ?)
-       WHERE (users.id != ?) AND (users.name LIKE ? OR users.surname LIKE ?)`,
-      [userId, userId, userId, likeQuery, likeQuery],
+      `SELECT 'to' AS direction, u.id, u.name, u.surname, friends.status FROM friends
+      JOIN users AS u ON friends.to_user = u.id
+      WHERE friends.from_user = ? AND (u.name LIKE ? OR u.surname LIKE ?)
+
+      UNION
+
+      SELECT 'from' AS direction, u.id, u.name, u.surname, friends.status FROM friends
+      JOIN users AS u ON friends.from_user = u.id
+      WHERE friends.to_user = ? AND (u.name LIKE ? OR u.surname LIKE ?)`,
+      [userId, likeQuery, likeQuery, userId, likeQuery, likeQuery],
       (err, rows) => {
         if (err) {
           reject(err);
-        } else {
-          resolve(rows);
         }
+        resolve(rows);
       }
     );
   });
 };
 
+const get_user_by_id = (id) => {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT * FROM users WHERE id = ?`, [id], (err, row) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(row);
+    });
+  });
+};
 
 const get_user_by_email = (email) => {
   return new Promise((resolve, reject) => {
@@ -178,7 +185,7 @@ const get_user_by_email = (email) => {
 const get_fav_courses = (id) => {
   return new Promise((resolve, reject) => {
     db.all(
-      `SELECT courses.* FROM favCourses JOIN courses ON favCourses.course = courses.id WHERE user = ?`,
+      `SELECT  FROM favCourses JOIN courses ON favCourses.course = courses.id WHERE user = ?`,
       [id],
       (err, rows) => {
         if (err) {
@@ -199,6 +206,25 @@ const get_courses_by_code = (userId, course) => {
        WHERE courses.department = ? AND courses.number = ? 
        ORDER BY courses.year DESC, courses.semester DESC`,
       [userId, course.department, course.number],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(rows);
+      }
+    );
+  });
+};
+
+const get_courses_by_code_instructor = (userId, course) => {
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT courses.*, (favCourses.user IS NOT NULL) AS isFav 
+       FROM courses 
+       LEFT JOIN favCourses ON courses.id = favCourses.course AND favCourses.user = ? 
+       WHERE courses.department = ? AND courses.number = ? AND courses.instructor = ? 
+       ORDER BY courses.year DESC, courses.semester DESC`,
+      [userId, course.department, course.number, course.instructor],
       (err, rows) => {
         if (err) {
           reject(err);
@@ -251,7 +277,7 @@ const get_friends = (id) => {
       SELECT 'from' AS f, u.id, u.name, u.surname, status FROM friends
       JOIN users AS u ON friends.from_user = u.id
       WHERE friends.to_user = ?`,
-      [id],
+      [id, id],
       (err, rows) => {
         if (err) {
           reject(err);
@@ -465,6 +491,7 @@ module.exports = {
   get_fav_courses,
   get_friends,
   get_user_by_email,
+  get_user_by_id,
   drop_courses,
   drop_favCourses,
   drop_friends,
@@ -475,6 +502,7 @@ module.exports = {
   remove_friend,
   accept_friend,
   get_courses_by_code,
+  get_courses_by_code_instructor,
   query_courses_by_code,
   query_courses_by_code_all,
   query_courses_by_instructor_name,
