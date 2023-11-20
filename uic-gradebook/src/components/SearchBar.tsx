@@ -9,7 +9,7 @@ const SearchBar = ({
   setSearchString,
 }: {
   searchString: string;
-  setSearchString: React.Dispatch<React.SetStateAction<string>>;
+  setSearchString: (value: string) => void;
 }) => {
   return (
       <Input

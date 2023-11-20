@@ -1,9 +1,4 @@
-import {
-  Class,
-  User,
-  FriendStatus,
-  DisplayFriend
-} from "../types/types";
+import { Class, User, FriendStatus, DisplayFriend } from "../types/types";
 
 import { db_Class, db_Grade, db_User } from "../types/backend";
 
@@ -121,6 +116,7 @@ export const getCourses = async (
 };
 
 interface db_Friend extends db_User {
+  f: string;
   status: string;
 }
 
@@ -130,11 +126,19 @@ export const getFriends = async (userId: number): Promise<DisplayFriend[]> => {
   const friends: db_Friend[] = await res.json();
 
   return friends.map((friend: db_Friend) => {
+    let status = "pending";
+
+    if (friend.status === "accepted") {
+      status = "accepted";
+    } else if (friend.status === "requested" && friend.f === "from") {
+      status = "requested";
+    }
+
     return {
       id: friend.id,
       name: friend.name,
       surname: friend.surname,
-      status: friend.status as FriendStatus,
+      status: status as FriendStatus,
     };
   });
 };
@@ -144,17 +148,29 @@ export const getSearchFriends = async (
   query: string,
   id: number
 ) => {
-  const res = await fetch(`${endpoint}/users/${userId}/${query}`);
+  const res = await fetch(`${endpoint}/api/query/${userId}/${query}`);
 
   const friends = await res.json();
 
   return {
     res: friends.map((friend: db_Friend) => {
+      let status = "none";
+
+      console.log(friend);
+      
+      if (friend.status === "accepted") {
+        status = "accepted";
+      } else if (friend.status === "requested" && friend.f === "from") {
+        status = "requested";
+      } else if (friend.status === "requested" && friend.f === "to") {
+        status = "pending";
+      }
+
       return {
         id: friend.id,
         name: friend.name,
         surname: friend.surname,
-        status: friend.status as FriendStatus,
+        status: status as FriendStatus,
       };
     }),
     id,
@@ -195,23 +211,29 @@ export const acceptFriend = async (userId: number, friendId: number) => {
 };
 
 export const addFavorite = async (userId: number, courseId: number) => {
-  const res = await fetch(`${endpoint}/users/${userId}/favClasses/${courseId}`, {
-    method: "POST",
-    body: JSON.stringify({
-      courseId,
-    }),
-  });
+  const res = await fetch(
+    `${endpoint}/users/${userId}/favClasses/${courseId}`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        courseId,
+      }),
+    }
+  );
 
   console.log(await res.json());
 };
 
 export const removeFavorite = async (userId: number, courseId: number) => {
-  const res = await fetch(`${endpoint}/users/${userId}/favClasses/${courseId}`, {
-    method: "DELETE",
-    body: JSON.stringify({
-      courseId,
-    }),
-  });
+  const res = await fetch(
+    `${endpoint}/users/${userId}/favClasses/${courseId}`,
+    {
+      method: "DELETE",
+      body: JSON.stringify({
+        courseId,
+      }),
+    }
+  );
 
   console.log(await res.json());
 };

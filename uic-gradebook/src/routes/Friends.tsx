@@ -20,8 +20,8 @@ const FriendActions = ({
   showFriends: boolean;
   onLinkReqClick: (f: DisplayFriend, op: string) => void;
 }) => {
-  if (!showFriends) {
-    if (!friend?.status) {
+  console.log(friend.name, friend.status);
+  if (friend.status === "none") {
       return (
         <Button
           className="follow-button"
@@ -31,8 +31,6 @@ const FriendActions = ({
           Follow
         </Button>
       );
-    }
-    return <></>;
   } else if (friend?.status === "requested") {
     return (
       <div
@@ -131,15 +129,17 @@ const FriendItem = ({
 function Friends({user}: {user: User}) {
   const [searchString, setSearchString] = useState("");
   const [showFriends, setShow] = useState(true);
+  const [searchId, setId] = useState(0);
   const [friends, setFriends] = useState<DisplayFriend[]>([]);
   const [searchRes, setSearchRes] = useState<DisplayFriend[]>([]);
 
   useEffect(() => {
     const fetchFriends = async () => {
       const friendsData = await getFriends(user.id);
+    
       setFriends(friendsData);
     };
-    
+
     fetchFriends();
   }, [user]);
 
@@ -148,24 +148,32 @@ function Friends({user}: {user: User}) {
     else setShow(true);
   }, [friends]);
 
-  useEffect(() => {
-    const fetchSearchResults = async () => {
-      if (searchString === "") {
-        setShow(true);
-      } else {
-        setShow(false);
-        const {res, id} = await getSearchFriends(user.id, searchString, 0);
-        
-        if (id === 0)
-          setSearchRes(res);
-      }
-    };
+  const updateSearch = (value: string) => {
+    const id = searchId + 1;
 
-    fetchSearchResults();
-  }, [searchString, friends]);
+    searchFriends(value, id);
+
+    setId(id);
+    setSearchString(value);
+  }
+
+  const searchFriends = async (query: string, sid: number) => {
+    if (query === "") {
+      setShow(true);
+    } else {
+      setShow(false);
+
+      const { res, id } = await getSearchFriends(user.id, query, sid);
+      
+      if (id === searchId + 1) {
+        setSearchRes(res);
+      }
+    }
+  };
 
   // follow, accept, refuse, unlink
   const onLinkReqClick = (friend: DisplayFriend, op: string) => {
+    console.log(friend, op); return;
     if (op == "accept") {
       acceptFriend(user.id, friend.id)
     } else if (op == "refuse") {
@@ -182,7 +190,7 @@ function Friends({user}: {user: User}) {
       <div style={{ marginTop: "4%", width: "100%" }}>
         <SearchBar
           searchString={searchString}
-          setSearchString={setSearchString}
+          setSearchString={updateSearch}
         />
       </div>
       <Box>

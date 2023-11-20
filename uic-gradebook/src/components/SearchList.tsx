@@ -17,8 +17,7 @@ function SearchList() {
     } else {
       const { res, id } = await getSearchCourses("CS", query, sid);
 
-      if (id === sid) {
-        console.log(res);
+      if (id === searchId) {
         setResults(res);
       }
     }
@@ -35,10 +34,13 @@ function SearchList() {
           startContent={<SearchIcon size={24} />}
           value={search}
           onChange={(e) => {
-            searchCourses(e.target.value.trim(), searchId + 1);
+            const value = e.target.value.trimStart()
+            const id = searchId + 1;
 
-            setId(searchId + 1);
-            setSearch(e.target.value.trim());
+            searchCourses(value, id);
+
+            setId(id);
+            setSearch(value);
           }}
         />
       </div>

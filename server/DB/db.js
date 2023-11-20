@@ -140,13 +140,13 @@ const query_users_with_status = (userId, query) => {
   return new Promise((resolve, reject) => {
     const likeQuery = `%${query}%`; // Make sure to set 'searchQuery' to the user's input
     db.all(
-      `SELECT 'to' AS direction, u.id, u.name, u.surname, friends.status FROM friends
+      `SELECT 'to' AS f, u.id, u.name, u.surname, friends.status FROM friends
       JOIN users AS u ON friends.to_user = u.id
       WHERE friends.from_user = ? AND (u.name LIKE ? OR u.surname LIKE ?)
 
       UNION
 
-      SELECT 'from' AS direction, u.id, u.name, u.surname, friends.status FROM friends
+      SELECT 'from' AS f, u.id, u.name, u.surname, friends.status FROM friends
       JOIN users AS u ON friends.from_user = u.id
       WHERE friends.to_user = ? AND (u.name LIKE ? OR u.surname LIKE ?)`,
       [userId, likeQuery, likeQuery, userId, likeQuery, likeQuery],
