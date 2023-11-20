@@ -185,7 +185,7 @@ const get_user_by_email = (email) => {
 const get_fav_courses = (id) => {
   return new Promise((resolve, reject) => {
     db.all(
-      `SELECT  FROM favCourses JOIN courses ON favCourses.course = courses.id WHERE user = ?`,
+      `SELECT * FROM favCourses JOIN courses ON favCourses.course = courses.id WHERE user = ?`,
       [id],
       (err, rows) => {
         if (err) {
