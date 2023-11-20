@@ -14,6 +14,13 @@ export interface db_Class {
     w: number;
 }
 
+export interface db_Class_search {
+    department: string;
+    number: number;
+    name: string;
+    instructor: string;
+}
+
 export interface db_Grade extends db_Class {
     grade: string;
     isFav: boolean;

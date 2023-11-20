@@ -1,6 +1,6 @@
 import { Class, User, FriendStatus, DisplayFriend } from "../types/types";
 
-import { db_Class, db_Grade, db_User } from "../types/backend";
+import { db_Class, db_Class_search, db_Grade, db_User } from "../types/backend";
 
 const endpoint = "http://localhost:8080";
 
@@ -81,17 +81,15 @@ export const getSearchCourses = async (
   department: string,
   query: string,
   id: number
-): Promise<{ res: Class[]; id: number }> => {
+): Promise<{ res: db_Class_search[]; id: number }> => {
   const target = query.toLowerCase();
 
   const res = await fetch(`${endpoint}/api/courses/${department}/${target}`);
 
-  const courses: db_Class[] = await res.json();
+  const courses: db_Class_search[] = await res.json();
 
   return {
-    res: courses.map((course: db_Class) => {
-      return db_class_to_front(course);
-    }),
+    res: courses,
     id,
   };
 };
@@ -156,8 +154,6 @@ export const getSearchFriends = async (
     res: friends.map((friend: db_Friend) => {
       let status = "none";
 
-      console.log(friend);
-      
       if (friend.status === "accepted") {
         status = "accepted";
       } else if (friend.status === "requested" && friend.f === "from") {

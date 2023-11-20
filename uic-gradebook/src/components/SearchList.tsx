@@ -3,13 +3,13 @@ import { Input } from "@nextui-org/react";
 import Box from "./Box";
 import CourseCard from "./CourseCard";
 import { SearchIcon } from "@primer/octicons-react";
-import { Class } from "../types/types";
 import { getSearchCourses } from "../api/server";
+import { db_Class_search } from "../types/backend";
 
 function SearchList() {
   const [search, setSearch] = useState("");
   const [searchId, setId] = useState(0);
-  const [results, setResults] = useState<Class[]>([]);
+  const [results, setResults] = useState<db_Class_search[]>([]);
 
   const searchCourses = async (query: string, sid: number) => {
     if (query === "") {
@@ -17,7 +17,9 @@ function SearchList() {
     } else {
       const { res, id } = await getSearchCourses("CS", query, sid);
 
-      if (id === searchId) {
+      console.log(id, searchId);
+      if (id === searchId + 1) {
+        console.log(res);
         setResults(res);
       }
     }
@@ -45,10 +47,10 @@ function SearchList() {
         />
       </div>
       <Box>
-        {results.map((course: Class) => {
+        {results.map((course: db_Class_search) => {
           return (
             <>
-              <div key={course.name + course.teacher} style={{ width: "100%" }}>
+              <div key={course.name + course.instructor} style={{ width: "100%" }}>
                 <CourseCard course={course} />
               </div>
             </>
