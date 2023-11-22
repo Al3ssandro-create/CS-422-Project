@@ -1,4 +1,4 @@
-export type FriendStatus = "pending" | "accepted" | "requested";
+export type FriendStatus = "accepted" | "requested" | "pending" | "none"
 
 export interface Friend {
   id: number;
@@ -12,23 +12,25 @@ export interface User {
   email: string;
   gpa: number;
   profilePic?: string;
-  favClasses: number[]; // just save the id of the class instead of the whole class
-  friends: Friend[];
 }
 
-export interface DisplayFriend extends Friend, User {}
+export interface DisplayFriend {
+  id: number;
+  name: string;
+  surname: string;
+  status: FriendStatus;
+  profilePic?: string;
+}
 
 export interface Class {
   id: number;
   name: string;
   teacher: string;
   semester: string;
+  code: number;
+  department: string;
   distribution?: Distribution;
-}
-
-export interface DisplayClass {
-  name: string;
-  teacher: string;
+  isFav?: boolean;
 }
 
 export interface Distribution {

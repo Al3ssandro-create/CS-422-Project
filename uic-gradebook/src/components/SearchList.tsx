@@ -1,28 +1,29 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@nextui-org/react";
 import Box from "./Box";
 import CourseCard from "./CourseCard";
 import { SearchIcon } from "@primer/octicons-react";
-import { DisplayClass } from "../types/types";
 import { getSearchCourses } from "../api/server";
+import { db_Class_search } from "../types/backend";
 
 function SearchList() {
   const [search, setSearch] = useState("");
   const [searchId, setId] = useState(0);
-  const [results, setResults] = useState<DisplayClass[]>([]);
+  const [results, setResults] = useState<db_Class_search[]>([]);
 
-  useEffect(() => {
-    const searchCourses = async () => {
-      if (search == "") return 
-      const { res, id } = await getSearchCourses(search, searchId);
+  const searchCourses = async (query: string, sid: number) => {
+    if (query === "") {
+      setResults([]);
+    } else {
+      const { res, id } = await getSearchCourses("CS", query, sid);
 
-      if (id == searchId) {
+      console.log(id, searchId);
+      if (id === searchId + 1) {
+        console.log(res);
         setResults(res);
       }
-    };
-
-    searchCourses();
-  }, [search, searchId]);
+    }
+  };
 
   return (
     <>
@@ -32,20 +33,29 @@ function SearchList() {
           fullWidth
           radius="full"
           placeholder="The course or teacher"
-          startContent={<SearchIcon size={24}/>}
+          startContent={<SearchIcon size={24} />}
           value={search}
           onChange={(e) => {
-            setId(searchId + 1);
-            setSearch(e.target.value.trimStart());
+            const value = e.target.value.trimStart()
+            const id = searchId + 1;
+
+            searchCourses(value, id);
+
+            setId(id);
+            setSearch(value);
           }}
         />
       </div>
       <Box>
-        {results.map((course: DisplayClass) => (
-          <div key={course.name} style={{width: "100%"}}>
-            <CourseCard course={course} />
-          </div>
-        ))}
+        {results.map((course: db_Class_search) => {
+          return (
+            <>
+              <div key={course.name + course.instructor} style={{ width: "100%" }}>
+                <CourseCard course={course} />
+              </div>
+            </>
+          );
+        })}
       </Box>
     </>
   );

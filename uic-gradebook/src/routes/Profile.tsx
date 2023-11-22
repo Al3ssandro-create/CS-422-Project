@@ -1,29 +1,9 @@
-import { useEffect, useState } from "react";
 import { Button, Image } from "@nextui-org/react";
 import Box from "../components/Box";
 import { User } from "../types/types";
-import { getUser, getUserId } from "../api/server";
 import { FeedPersonIcon } from "@primer/octicons-react";
 
-const ProfilePage = () => {
-  const [user, setUser] = useState<User>({
-    id: 1,
-    name: "",
-    surname: "",
-    email: "",
-    gpa: 0,
-  } as User);
-
-  const [userId, setUserId] = useState<number>();
-
-  useEffect(() => {
-    getUserId().then((id) => setUserId(id));
-  }, []);
-
-  useEffect(() => {
-    getUser(userId as number).then((user) => {if (user) setUser(user)});
-  }, [userId]);
-
+const ProfilePage = ({user}: {user: User}) => {
   // handle Delete acc
   const handleDeleteAccount = async () => {
     // for future use
@@ -85,7 +65,7 @@ const ProfilePage = () => {
                 paddingTop: "4%",
               }}
             >
-              <h1>{user!.name}</h1>
+              <h1>{user.name} {user.surname}</h1>
               <div
                 style={{
                   color: "black",
@@ -93,6 +73,7 @@ const ProfilePage = () => {
                   fontSize: "20px",
                 }}
               >
+                <p>{user!.email}</p>
                 <p>GPA: {user!.gpa}</p>
               </div>
             </div>
@@ -108,12 +89,18 @@ const ProfilePage = () => {
         >
           <div className="profile-button">
             <div style={{ marginBottom: "10px", width: "100px" }}>
-              <Button style={buttonStyle} onClick={async () => handleDeleteAccount()}>
+              <Button
+                style={buttonStyle}
+                onClick={async () => handleDeleteAccount()}
+              >
                 Delete Account
               </Button>
             </div>
             <div style={{ marginBottom: "10px", width: "auto" }}>
-              <Button style={buttonStyle} onClick={async () => handleChangePassword()}>
+              <Button
+                style={buttonStyle}
+                onClick={async () => handleChangePassword()}
+              >
                 Change Password
               </Button>
             </div>

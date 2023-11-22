@@ -2,7 +2,6 @@ import { Card } from "@nextui-org/react";
 import { select, pie, arc, PieArcDatum } from "d3";
 import { useEffect, useRef } from "react";
 function D3PieChart({ data }: { data: Array<number> }) {
-  console.log(data);
   const ref = useRef(null);
   const color = ["#2CE574", "#CDF03A", "#FFE500", "#FF9600", "#FF3924"];
   const labels = ["A", "B", "C", "D", "F"];

@@ -1,22 +1,17 @@
 import HomepageCourse from "../components/HomepageCourse";
-import { Class, Distribution } from "../types/types";
+import { Class, Distribution, User } from "../types/types";
 import Box from "../components/Box";
 import { useNavigate } from "react-router-dom";
 import "../styles/css/card-course.css";
-import { getFavCourses, getUserId } from "../api/server";
+import { getFavCourses } from "../api/server";
 import { useEffect, useState } from "react";
 
-function Homepage() {
+function Homepage({user}: {user: User}) {
   const [courses, setCourses] = useState<Class[]>([]);
-  const [userId, setUserId] = useState<number>();
 
   useEffect(() => {
-    getUserId().then((id) => setUserId(id));
-  }, []);
-
-  useEffect(() => {
-    getFavCourses(userId as number).then((courses) => setCourses(courses));
-  }, [userId]);
+    getFavCourses(user.id).then((courses) => setCourses(courses));
+  }, [user]);
 
   const navigate = useNavigate();
 
@@ -35,7 +30,7 @@ function Homepage() {
           <div id="reference" style={{width:"100%"}}>
           {courses.map((item, index) => (
             <div
-              onClick={() => navigate(`course/${item.name}`)}
+              onClick={() => navigate(`course/${item.department}/${item.code}/${item.teacher}`)}
               key={index}
               style={{ width: "100%" }}
             >
