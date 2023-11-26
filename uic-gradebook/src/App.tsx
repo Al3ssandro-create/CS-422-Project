@@ -9,6 +9,7 @@ import Header from './components/Header';
 import Navbar from './components/Navbar';
 import { User } from './types/types';
 import { getUser, getUserId } from './api/server';
+import FriendsProfile from './routes/FriendsProfile';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User>({} as User);
@@ -33,6 +34,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Homepage user={user}/>} />
         <Route path="course/:department/:code/:instructor" element={<Course user={user}/>} />
         <Route path="friends" element={<Friends user={user}/>} />
+        <Route path="friends/profile/:name/:surname/:id" element={<FriendsProfile user={user}/>} />
         <Route path="profile" element={<Profile user={user}/>} />
         <Route path="searchcourse" element={<SearchCourse />} />
       </Routes>

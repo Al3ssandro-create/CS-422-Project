@@ -20,6 +20,10 @@ const {
   query_courses_by_instructor_name_all,
   query_users_with_status,
   get_courses_by_code_instructor,
+  add_grade,
+  get_user_grades,
+  modify_grade,
+  delete_grade,
 } = require("./db/db");
 
 function isNumberAndNotStartingWithZero(str) {
@@ -45,6 +49,26 @@ app.get("/api/user/:email", async (req, res) => {
 app.get("/api/user/:id/fav_courses", async (req, res) => {
   const fav_courses = await get_fav_courses(req.params.id);
   res.json(fav_courses);
+});
+
+app.get("/api/user/:user/grades", async (req, res) => {
+  const grades = await get_user_grades(req.params.user);
+  res.json(grades);
+});
+
+app.post("/api/user/:user/grades/:courseId/:grade", async (req, res) => {
+  const grades = await add_grade(req.params.user, req.params.courseId, req.params.grade);
+  res.json(grades);
+});
+
+app.put("/api/user/:user/grades/:courseId/:grade", async (req, res) => {
+  const grades = await modify_grade(req.params.user, req.params.courseId, req.params.grade);
+  res.json(grades);
+});
+
+app.delete("/api/user/:user/grades/:courseId", async (req, res) => {
+  const grades = await delete_grade(req.params.user, req.params.courseId);
+  res.json(grades);
 });
 
 app.get("/api/courses/:id/:department/:number", async (req, res) => {

@@ -1,6 +1,6 @@
-import { Class, User, FriendStatus, DisplayFriend } from "../types/types";
+import { Class, User, FriendStatus, DisplayFriend, Grade } from "../types/types";
 
-import { db_Class, db_Class_search, db_Grade, db_User } from "../types/backend";
+import { db_Class, db_Class_search, db_Grade, db_User, db_User_grade } from "../types/backend";
 
 const endpoint = "http://localhost:8080";
 
@@ -22,6 +22,7 @@ function db_class_to_front(course: db_Class): Class {
     semester: course.semester + " " + course.year,
     code: course.number,
     department: course.department,
+    grade: "",
     distribution: {
       a: course.a,
       b: course.b,
@@ -40,6 +41,7 @@ function db_grade_to_front(grade: db_Grade): Class {
     semester: grade.semester + " " + grade.year,
     code: grade.number,
     department: grade.department,
+    grade: grade.userGrade,
     isFav: grade.isFav,
     distribution: {
       a: grade.a,
@@ -49,6 +51,62 @@ function db_grade_to_front(grade: db_Grade): Class {
       f: grade.f,
     },
   };
+}
+
+function db_user_grades_to_front(grade: db_User_grade ): Grade {
+  return {
+    user: grade.user,
+    value: grade.grade,
+    semester: grade.semester,
+    year: grade.year,
+    department: grade.department,
+    number: grade.number,
+    name: grade.name,
+  };
+}
+
+
+export const getGrades = async (userId: number): Promise<Grade[]> => {
+  const res = await fetch(`${endpoint}/api/user/${userId}/grades`);
+  if (res.status === 404) return [];
+  const grades: db_User_grade[] = await res.json();
+  return grades.map((grade: db_User_grade) => {
+    return db_user_grades_to_front(grade);
+  });
+};
+
+export const addGrade = async (userId: number, courseId: number, grade: string) => {
+  await fetch(`${endpoint}/api/user/${userId}/grades/${courseId}/${grade}`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        "courseId": courseId,
+        "grade": grade,
+      }),
+    }
+  );
+}
+export const modifyGrade = async (userId: number, courseId: number, grade: string) => {
+  await fetch(`${endpoint}/api/user/${userId}/grades/${courseId}/${grade}`,
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        "courseId": courseId,
+        "grade": grade,
+      }),
+    }
+  );
+}
+export const removeGrade = async (userId: number, courseId: number) => {
+  await fetch(`${endpoint}/api/user/${userId}/grades/${courseId}`,
+    {
+      method: "DELETE",
+      body: JSON.stringify({
+        "courseId": courseId,
+      }),
+    }
+  );
+
 }
 
 export const getUser = async (userId: string): Promise<User | undefined> => {
@@ -105,9 +163,8 @@ export const getCourses = async (
   );
 
   if (res.status === 404) return [];
-
-  const courses: db_Grade[] = await res.json();
-
+  const courses : db_Grade[] = await res.json();
+  console.log(courses)
   return courses.map((course: db_Grade) => {
     return db_grade_to_front(course);
   });

@@ -78,11 +78,15 @@ function D3PieChart({ data }: { data: Array<number> }) {
 function HomepageCourse({
   data,
   name,
+  department,
+  code,
   teacher,
   semester,
 }: {
   data: Array<number>;
   name: string;
+  department: string;
+  code: string;
   teacher: string;
   semester: string;
 }) {
@@ -119,11 +123,21 @@ function HomepageCourse({
               fontWeight: "bold",
               whiteSpace: "nowrap",
               fontSize: "3vw",
-              marginBottom: "5%",
             }}
           >
-            {semester} {name}
+            {semester.charAt(0).toUpperCase() + semester.slice(1)} {name}
           </span>
+          <span
+            style={{
+              fontWeight: "bold",
+              display: "block",
+              whiteSpace: "nowrap",
+              fontSize: "3vw",
+              marginBottom: "5%",
+            }}
+            >
+            {department} {code}
+            </span>
           <span
             style={{
               fontWeight: "bold",

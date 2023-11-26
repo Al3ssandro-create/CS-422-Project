@@ -37,6 +37,8 @@ function Homepage({user}: {user: User}) {
               <HomepageCourse
                 data={Object.values(item.distribution as Distribution)}
                 name={item.name}
+                department={item.department}
+                code={item.code.toString()}
                 teacher={item.teacher}
                 semester={item.semester}
               />

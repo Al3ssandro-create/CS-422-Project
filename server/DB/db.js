@@ -64,7 +64,7 @@ const initialize = () => {
       db.run(`CREATE TABLE IF NOT EXISTS grade (
         user INTEGER NOT NULL,
         course INTEGER NOT NULL,
-        grade INTEGER NOT NULL,
+        grade TEXT NOT NULL,
         PRIMARY KEY (user, course)
       )`);
     },
@@ -72,6 +72,69 @@ const initialize = () => {
       console.log(err.message);
     }
   );
+};
+
+const get_user_grades = (userId) => {
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT grade.user, grade.grade, courses.semester, courses.year, courses.department, courses.number, courses.name 
+      FROM grade 
+      INNER JOIN courses ON grade.course = courses.id 
+      WHERE grade.user = ?`,
+      [userId],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(rows);
+      }
+    );
+  });
+};
+
+const add_grade = (userId, courseId, grade) => {
+  return new Promise((resolve, reject) => {
+    db.run(
+      `INSERT INTO grade (user, course, grade) VALUES (?, ?, ?)`,
+      [userId, courseId, grade],
+      (err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      }
+    );
+  });
+};
+
+const modify_grade = (userId, courseId, grade) => {
+  return new Promise((resolve, reject) => {
+    db.run(
+      `UPDATE grade SET grade = ? WHERE user = ? AND course = ?`,
+      [grade, userId, courseId],
+      (err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      }
+    );
+  });
+};
+
+const delete_grade = (userId, courseId) => {
+  return new Promise((resolve, reject) => {
+    db.run(
+      `DELETE FROM grade WHERE user = ? AND course = ?`,
+      [userId, courseId],
+      (err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      }
+    );
+  });
 };
 
 const query_courses_by_instructor_name = (department, query) => {
@@ -226,12 +289,13 @@ const get_courses_by_code = (userId, course) => {
 const get_courses_by_code_instructor = (userId, course) => {
   return new Promise((resolve, reject) => {
     db.all(
-      `SELECT courses.*, (favCourses.user IS NOT NULL) AS isFav 
+      `SELECT courses.*, (favCourses.user IS NOT NULL) AS isFav, grade.grade AS userGrade
        FROM courses 
        LEFT JOIN favCourses ON courses.id = favCourses.course AND favCourses.user = ? 
+       LEFT JOIN grade ON courses.id = grade.course AND grade.user = ?
        WHERE courses.department = ? AND courses.number = ? AND courses.instructor = ? 
        ORDER BY courses.year DESC, courses.semester DESC`,
-      [userId, course.department, course.number, course.instructor],
+      [userId, userId, course.department, course.number, course.instructor],
       (err, rows) => {
         if (err) {
           reject(err);
@@ -515,4 +579,8 @@ module.exports = {
   query_courses_by_instructor_name,
   query_courses_by_instructor_name_all,
   query_users_with_status,
+  add_grade,
+  get_user_grades,
+  modify_grade,
+  delete_grade,
 };

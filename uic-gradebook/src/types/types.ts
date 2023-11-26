@@ -29,6 +29,7 @@ export interface Class {
   semester: string;
   code: number;
   department: string;
+  grade: string;
   distribution?: Distribution;
   isFav?: boolean;
 }
@@ -39,4 +40,14 @@ export interface Distribution {
   c: number;
   d: number;
   f: number;
+}
+
+export interface Grade{
+  user: number ;
+  value: string ;
+  semester: string ;
+  year: number;
+  department: string ;
+  number: number ;
+  name: string ;
 }

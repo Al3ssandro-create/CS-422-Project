@@ -9,6 +9,7 @@ import Box from "../components/Box";
 import { Button, Card, CardBody } from "@nextui-org/react";
 import { acceptFriend, addFriend, getFriends, getSearchFriends, removeFriend } from "../api/server";
 import { DisplayFriend, User } from "../types/types";
+import { Navigate, useNavigate } from "react-router-dom";
 
 // FriendActions component to handle the follow and pending actions
 const FriendActions = ({
@@ -21,7 +22,6 @@ const FriendActions = ({
   onLinkReqClick: (f: DisplayFriend, op: string) => void;
 }) => {
   const [displayFriend, setDisplayFriend] = useState<DisplayFriend>(friend);
-
   const updateDisplayFriend = (action: string) => {
     onLinkReqClick(friend, action)
 
@@ -99,8 +99,9 @@ const FriendItem = ({
   showFriends: boolean;
   onLinkReqClick: (f: DisplayFriend, op: string) => void;
 }) => {
+  const navigate = useNavigate();
   return (
-    <div key={friend.id}>
+    <div key={friend.id} onClick={() => navigate(`/friends/profile/${friend.name}/${friend.surname}/${friend.id}`)}>
       <Card
         shadow="lg"
         style={{

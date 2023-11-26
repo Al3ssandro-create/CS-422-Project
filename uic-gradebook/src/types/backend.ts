@@ -22,7 +22,7 @@ export interface db_Class_search {
 }
 
 export interface db_Grade extends db_Class {
-    grade: string;
+    userGrade: string;
     isFav: boolean;
 }
 
@@ -32,4 +32,13 @@ export interface db_User {
     surname: string;
     email: string;
     gpa: number;
+}
+export interface db_User_grade{
+    user: number;
+    grade: string;
+    semester: string;
+    year: number;
+    department: string;
+    number: number;
+    name: string;
 }

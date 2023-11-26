@@ -1,9 +1,9 @@
-import { useState } from "react";
-import {Card, CardHeader, CardBody} from "@nextui-org/react";
+import { useEffect, useState } from "react";
+import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/react";
 import { FaStar,FaRegStar } from "react-icons/fa";
 import { Class, Distribution } from "../types/types";
 import * as d3 from "d3";
-import { addFavorite, removeFavorite } from "../api/server";
+import { addFavorite, addGrade, modifyGrade, removeFavorite, removeGrade } from "../api/server";
 interface CourseCardProps {
   course: Class;
   userGrade?: string;
@@ -47,6 +47,21 @@ function BarChart({ distribution }: { distribution: Distribution | undefined }) 
 }
 function SingleCourse({ course, userGrade, fav, userId }: CourseCardProps) {
     const [starFilled, setStarFilled] = useState(fav);
+    const [gradeInput, setGradeInput] = useState('');
+    useEffect(() => {
+      setStarFilled(fav);
+      setGradeInput(userGrade || '');
+    }, [fav, userGrade]);
+    
+    const handleGradeChange = (event) => {
+      console.log(event.target.value, gradeInput)
+      if(gradeInput === event.target.value) return;
+      else if(gradeInput !== '' && event.target.value !== '') modifyGrade(userId, course.id, event.target.value);
+      else if(gradeInput !== '' && event.target.value === '') removeGrade(userId, course.id);
+      else addGrade(userId, course.id, event.target.value);
+      setGradeInput(event.target.value);
+      };
+
   
     const handleStarClick = () => {
         if (starFilled) {
@@ -62,15 +77,30 @@ function SingleCourse({ course, userGrade, fav, userId }: CourseCardProps) {
       <Card className="py-4" style={{marginBottom: "4%"}}>
           <CardHeader className="pb-0 pt-2 px-4 flex items-center justify-between">
               <div></div>
-              <h3 style={{fontSize:"3.5vw"}}>{course.semester} {course.name}</h3>
+              <h3 style={{fontSize:"3.5vw"}}>{course.semester.charAt(0).toUpperCase() + course.semester.slice(1)} {course.department + " " + course.code}</h3>
               <div onClick={handleStarClick}>
                   {starFilled? <FaStar style={{fontSize:"3.5vw"}}color={"black" }/>:<FaRegStar  style={{fontSize:"3.5vw"}}/>}
               </div>   
           </CardHeader>
+          <CardHeader className="pb-0 pt-2 px-4 flex items-center justify-center">
+            <h3 style={{fontSize:"2.5vw"}}>{course.name}</h3>
+            </CardHeader>
           <CardBody className="px-4" >
                   <BarChart distribution={course.distribution}/>
           </CardBody>
-          {userGrade && <h5>Your grade: {userGrade}</h5>}
+          <CardFooter className="px-4 flex items-center justify-center">
+          {userGrade && 
+            <h5>Your grade: 
+              <select value={gradeInput || ''} onChange={handleGradeChange}>
+                <option value="">N/A</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="F">F</option>
+              </select>
+            </h5>}
+          </CardFooter>
       </Card>
     );
   }

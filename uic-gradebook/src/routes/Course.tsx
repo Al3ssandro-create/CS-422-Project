@@ -13,13 +13,29 @@ function Course({user}: {user: User}) {
     const obtainCourses = async () => {
       if ( department === undefined || code === undefined || instructor === undefined) return;
 
-      const courses: Class[] = await getCourses(user.id, department, parseInt(code), instructor);
+      let courses: Class[] = await getCourses(user.id, department, parseInt(code), instructor);
+      courses = courses.sort((a, b) => {
+        
+        if (a.isFav && !b.isFav) return -1;
+        if (!a.isFav && b.isFav) return 1;
+  
+        const aSemesterYear = parseInt(a.semester.split(' ')[1]);
+        const bSemesterYear = parseInt(b.semester.split(' ')[1]);
+  
+        if (aSemesterYear > bSemesterYear) return -1;
+        if (aSemesterYear < bSemesterYear) return 1;
 
+        const semesterOrder = ['fall', 'summer', 'spring'];
+        const aSemester = semesterOrder.indexOf(a.semester.split(' ')[0].toLowerCase());
+        const bSemester = semesterOrder.indexOf(b.semester.split(' ')[0].toLowerCase());
+  
+        return aSemester - bSemester;
+      });
       setCourses(courses);
     };
 
     obtainCourses();
-  }, []);
+  }, [user]);
 
   return (
     <>
@@ -29,6 +45,7 @@ function Course({user}: {user: User}) {
             <SingleCourse
               key={course.id + course.semester}
               course={course}
+              userGrade={course.grade}
               fav={course.isFav ?? false}
               userId={user.id}
             />

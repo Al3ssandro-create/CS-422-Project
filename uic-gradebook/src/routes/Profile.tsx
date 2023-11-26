@@ -1,9 +1,35 @@
-import { Button, Image } from "@nextui-org/react";
+import {
+  Button,
+  Image,
+} from "@nextui-org/react";
 import Box from "../components/Box";
-import { User } from "../types/types";
+import { Grade, User } from "../types/types";
 import { FeedPersonIcon } from "@primer/octicons-react";
+import { useEffect, useState } from "react";
+import { getGrades } from "../api/server";
+import UserGrades from "../components/UserGrades";
 
-const ProfilePage = ({user}: {user: User}) => {
+const ProfilePage = ({ user }: { user: User }) => {
+  const [gpa, setGpa] = useState<number>(0); //gpa of the user
+  const [grades, setGrades] = useState<Grade[]>([]);
+  useEffect(() => {
+    getGrades(user.id).then((grades) => {
+      setGrades(grades);
+      setGpa(calculateGPA(grades.map((grade) => grade.value)));//probably we have to do that in the backend
+    });
+  }, [user]);
+  const calculateGPA = (grades: string[]): number => {
+    const points = {
+      'A': 4,
+      'B': 3,
+      'C': 2,
+      'D': 1,
+      'F': 0,
+    };
+  
+    const totalPoints = grades.reduce((sum, grade) => sum + points[grade], 0);
+    return totalPoints / grades.length;
+  };
   // handle Delete acc
   const handleDeleteAccount = async () => {
     // for future use
@@ -15,6 +41,7 @@ const ProfilePage = ({user}: {user: User}) => {
     // for future use
     alert("Password changed.");
   };
+
 
   const containerStyle = {
     display: "flex",
@@ -65,7 +92,9 @@ const ProfilePage = ({user}: {user: User}) => {
                 paddingTop: "4%",
               }}
             >
-              <h1>{user.name} {user.surname}</h1>
+              <h1>
+                {user.name} {user.surname}
+              </h1>
               <div
                 style={{
                   color: "black",
@@ -74,7 +103,7 @@ const ProfilePage = ({user}: {user: User}) => {
                 }}
               >
                 <p>{user!.email}</p>
-                <p>GPA: {user!.gpa}</p>
+                <p>GPA: {gpa}</p>
               </div>
             </div>
           </Box>
@@ -105,6 +134,9 @@ const ProfilePage = ({user}: {user: User}) => {
               </Button>
             </div>
           </div>
+        </div>
+        <div style={{ marginTop: "40px",marginBottom: "10px", width: "auto" }}>
+          <UserGrades grades={grades} />       
         </div>
       </div>
     </div>
