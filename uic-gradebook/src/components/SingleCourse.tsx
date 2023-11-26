@@ -89,7 +89,6 @@ function SingleCourse({ course, userGrade, fav, userId }: CourseCardProps) {
                   <BarChart distribution={course.distribution}/>
           </CardBody>
           <CardFooter className="px-4 flex items-center justify-center">
-          {userGrade && 
             <h5>Your grade: 
               <select value={gradeInput || ''} onChange={handleGradeChange}>
                 <option value="">N/A</option>
@@ -99,7 +98,7 @@ function SingleCourse({ course, userGrade, fav, userId }: CourseCardProps) {
                 <option value="D">D</option>
                 <option value="F">F</option>
               </select>
-            </h5>}
+            </h5>
           </CardFooter>
       </Card>
     );
