@@ -11,11 +11,13 @@ import { BiSearchAlt, BiSearch, BiSolidGroup, BiGroup } from "react-icons/bi";
 // contains all the icons to deal with navigation, the route must be used properly
 
 function Navbar() {
+  const matchFriends = useMatch("/friends");
+  const matchProfile = useMatch("/friends/profile/:name/:surname/:id");
   return (
     <>
       <div style={{ ...flexRow, ...stickyFooter }}>
         <NavLink to="/friends">
-          {useMatch("/friends") ? (
+          {(matchFriends || matchProfile) ? (
             <BiSolidGroup size={32} color="white" />
           ) : (
             <BiGroup size={32} color="white" />
