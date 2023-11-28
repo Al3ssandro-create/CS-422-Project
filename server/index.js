@@ -94,13 +94,13 @@ app.get(
 );
 
 app.post("/api/user/:id/fav_courses/:courseId", async (req, res) => {
-  console.log(req.params);
+
   const course = await add_fav_course(req.params.id, req.params.courseId);
   res.json(course);
 });
 
 app.delete("/api/user/:id/fav_courses/:courseId", async (req, res) => {
-  console.log(req.params);
+
   const course = await remove_fav_course(req.params.id, req.params.courseId);
   res.json(course);
 });
@@ -121,7 +121,7 @@ app.delete("/api/user/:id/friends/:friendId", async (req, res) => {
 });
 
 app.put("/api/user/:id/friends/:friendId", async (req, res) => {
-  console.log(req.body)
+
   const friend = await accept_friend(req.params.id, req.params.friendId);
   res.json(friend);
 });

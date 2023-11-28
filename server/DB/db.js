@@ -77,7 +77,7 @@ const initialize = () => {
 const get_user_grades = (userId) => {
   return new Promise((resolve, reject) => {
     db.all(
-      `SELECT grade.user, grade.grade, courses.semester, courses.year, courses.department, courses.number, courses.name 
+      `SELECT grade.user, grade.grade, courses.semester, courses.year, courses.department, courses.number, courses.name, courses.instructor 
       FROM grade 
       INNER JOIN courses ON grade.course = courses.id 
       WHERE grade.user = ?`,
@@ -554,7 +554,22 @@ const drop_users = () => {
   db.run(`DROP TABLE IF EXISTS users`);
 };
 
+const get_department_distinct = () => {
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT DISTINCT department FROM courses ORDER BY department`,
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(rows);
+      }
+    );
+  });
+}
+
 module.exports = {
+  get_department_distinct,
   populate_user,
   populate_courses,
   populate_friends,
