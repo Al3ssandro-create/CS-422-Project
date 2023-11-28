@@ -109,14 +109,10 @@ const ProfilePage = ({ user }: { user: User }) => {
           </Box>
         </div>
 
-        <div
-          style={{
-            marginTop: "20%",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <div className="profile-button">
+        <div style={{ marginTop: "40px",marginBottom: "10px", width: "auto" }}>
+          <UserGrades grades={grades} />       
+        </div>
+        <div className="profile-button" style={{paddingTop: "10%"}}>
             <div style={{ marginBottom: "10px", width: "100px" }}>
               <Button
                 style={buttonStyle}
@@ -134,10 +130,6 @@ const ProfilePage = ({ user }: { user: User }) => {
               </Button>
             </div>
           </div>
-        </div>
-        <div style={{ marginTop: "40px",marginBottom: "10px", width: "auto" }}>
-          <UserGrades grades={grades} />       
-        </div>
       </div>
     </div>
   );

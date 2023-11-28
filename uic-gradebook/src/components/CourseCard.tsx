@@ -13,8 +13,10 @@ function CourseCard({ course }: { course: db_Class_search }) {
         }}
       >
         <Card shadow="lg" style={{ marginTop: "1%", marginBottom: "1%" }} fullWidth>
-          <CardHeader>
-            <p>{`${course.name} ${course.instructor}`}</p>
+          <CardHeader style={{display: "flex", flexDirection: "column", alignItems: "start"}}>
+            <p>{`${course.department} ${course.number}`}</p>
+            <p>{`${course.name}`}</p>
+            <p>{`${course.instructor}`}</p>
           </CardHeader>
         </Card>
       </div>

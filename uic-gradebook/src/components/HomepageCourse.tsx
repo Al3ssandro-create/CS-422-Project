@@ -163,13 +163,15 @@ function HomepageCourse({
               alignItems: "flex-end",
               paddingBottom: "3%",
             }}
-
-            onClick={(e) => {
-              e.stopPropagation();
-              onOpen();
-            }}
           >
-            <QuestionIcon size={24} />
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpen();
+              }}
+            >
+              <QuestionIcon size={24} />
+            </div>
           </span>
         </div>
       </div>

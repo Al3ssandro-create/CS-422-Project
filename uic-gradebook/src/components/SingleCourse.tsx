@@ -83,7 +83,7 @@ function SingleCourse({ course, userGrade, fav, userId }: CourseCardProps) {
               </div>   
           </CardHeader>
           <CardHeader className="pb-0 pt-2 px-4 flex items-center justify-center">
-            <h3 style={{fontSize:"2.5vw"}}>{course.name}</h3>
+            <h3 style={{fontSize:"3vw"}}>{course.name} - {course.teacher}</h3>
             </CardHeader>
           <CardBody className="px-4" >
                   <BarChart distribution={course.distribution}/>

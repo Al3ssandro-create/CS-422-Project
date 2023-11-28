@@ -40,7 +40,7 @@ function Course({user}: {user: User}) {
   return (
     <>
       <div style={{ width: "100%", backgroundColor: "white" }}>
-        <Box style={{ marginTop: "4%" }}>
+        <Box style={{ paddingTop: "4%" }}>
           {user && courses.map((course) => (
             <SingleCourse
               key={course.id + course.semester}
