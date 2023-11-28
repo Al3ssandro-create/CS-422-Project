@@ -17,7 +17,7 @@ function UserGrades({grades }: { grades : Grade[] }) {
 
   return (
     <>
-          <Table  aria-label=" Example table with dynamic content">
+          <Table style={{width: "100%"}}>
             <TableHeader>
               {columns.map((column) => (
                 <TableColumn key={column.key}>{column.label}</TableColumn>
