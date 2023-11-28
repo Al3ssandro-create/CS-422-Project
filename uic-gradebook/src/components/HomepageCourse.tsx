@@ -1,13 +1,17 @@
 import { Card } from "@nextui-org/react";
+import { QuestionIcon } from "@primer/octicons-react";
 import { select, pie, arc, PieArcDatum } from "d3";
 import { useEffect, useRef } from "react";
+
 function D3PieChart({ data }: { data: Array<number> }) {
   const ref = useRef(null);
   const color = ["#2CE574", "#CDF03A", "#FFE500", "#FF9600", "#FF3924"];
   const labels = ["A", "B", "C", "D", "F"];
   useEffect(() => {
     const svg = select(ref.current);
-    const pieGenerator = pie().value((d) => d as number).sort(null);
+    const pieGenerator = pie()
+      .value((d) => d as number)
+      .sort(null);
     const arcGenerator = arc<PieArcDatum<number>>()
       .innerRadius(0)
       .outerRadius(Math.min(400, 400) / 2);
@@ -29,11 +33,12 @@ function D3PieChart({ data }: { data: Array<number> }) {
       .attr("text-anchor", "middle")
       .attr("alignment-baseline", "middle")
       .style("font-size", "2.5vh")
-      .text(
-        (d) => {
-          const percentage = Math.round((d.data / data.reduce((a, b) => a + b, 0)) * 100);
-          return percentage !== 0 ? `${percentage}%` : '';
-        });
+      .text((d) => {
+        const percentage = Math.round(
+          (d.data / data.reduce((a, b) => a + b, 0)) * 100
+        );
+        return percentage !== 0 ? `${percentage}%` : "";
+      });
     const tooltip = select("#reference")
       .append("div")
       .attr("class", "tooltip")
@@ -70,7 +75,7 @@ function D3PieChart({ data }: { data: Array<number> }) {
       })
       .on("mouseout", (d) => {
         tooltip.transition().duration(500).style("opacity", 0);
-            });
+      });
   }, [data]);
 
   return <svg style={{ padding: "1%" }} ref={ref}></svg>;
@@ -82,6 +87,7 @@ function HomepageCourse({
   code,
   teacher,
   semester,
+  onOpen,
 }: {
   data: Array<number>;
   name: string;
@@ -89,6 +95,7 @@ function HomepageCourse({
   code: string;
   teacher: string;
   semester: string;
+  onOpen: () => void;
 }) {
   return (
     <Card
@@ -135,9 +142,9 @@ function HomepageCourse({
               fontSize: "3vw",
               marginBottom: "5%",
             }}
-            >
+          >
             {department} {code}
-            </span>
+          </span>
           <span
             style={{
               fontWeight: "bold",
@@ -147,6 +154,22 @@ function HomepageCourse({
             }}
           >
             {teacher}
+          </span>
+          <span
+            style={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "flex-end",
+              alignItems: "flex-end",
+              paddingBottom: "3%",
+            }}
+
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpen();
+            }}
+          >
+            <QuestionIcon size={24} />
           </span>
         </div>
       </div>
