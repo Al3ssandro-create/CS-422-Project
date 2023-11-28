@@ -62,6 +62,7 @@ function db_user_grades_to_front(grade: db_User_grade ): Grade {
     department: grade.department,
     number: grade.number,
     name: grade.name,
+    instructor: grade.instructor,
   };
 }
 
@@ -70,6 +71,7 @@ export const getGrades = async (userId: number): Promise<Grade[]> => {
   const res = await fetch(`${endpoint}/api/user/${userId}/grades`);
   if (res.status === 404) return [];
   const grades: db_User_grade[] = await res.json();
+  console.log(grades)
   return grades.map((grade: db_User_grade) => {
     return db_user_grades_to_front(grade);
   });

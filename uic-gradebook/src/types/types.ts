@@ -50,4 +50,5 @@ export interface Grade{
   department: string ;
   number: number ;
   name: string ;
+  instructor: string ;
 }

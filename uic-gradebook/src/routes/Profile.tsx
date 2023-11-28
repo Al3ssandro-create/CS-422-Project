@@ -1,7 +1,4 @@
-import {
-  Button,
-  Image,
-} from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 import Box from "../components/Box";
 import { Grade, User } from "../types/types";
 import { FeedPersonIcon } from "@primer/octicons-react";
@@ -15,18 +12,18 @@ const ProfilePage = ({ user }: { user: User }) => {
   useEffect(() => {
     getGrades(user.id).then((grades) => {
       setGrades(grades);
-      setGpa(calculateGPA(grades.map((grade) => grade.value)));//probably we have to do that in the backend
+      setGpa(calculateGPA(grades.map((grade) => grade.value))); //probably we have to do that in the backend
     });
   }, [user]);
   const calculateGPA = (grades: string[]): number => {
     const points = {
-      'A': 4,
-      'B': 3,
-      'C': 2,
-      'D': 1,
-      'F': 0,
+      A: 4,
+      B: 3,
+      C: 2,
+      D: 1,
+      F: 0,
     };
-  
+
     const totalPoints = grades.reduce((sum, grade) => sum + points[grade], 0);
     return totalPoints / grades.length;
   };
@@ -41,7 +38,6 @@ const ProfilePage = ({ user }: { user: User }) => {
     // for future use
     alert("Password changed.");
   };
-
 
   const containerStyle = {
     display: "flex",
@@ -103,33 +99,33 @@ const ProfilePage = ({ user }: { user: User }) => {
                 }}
               >
                 <p>{user!.email}</p>
-                <p>GPA: {gpa}</p>
+                <p>GPA: {gpa.toFixed(2)}</p>
               </div>
             </div>
           </Box>
         </div>
 
-        <div style={{ marginTop: "40px",marginBottom: "10px", width: "auto" }}>
-          <UserGrades grades={grades} />       
+        <div style={{ marginTop: "40px", marginBottom: "10px", width: "auto" }}>
+          <UserGrades grades={grades} />
         </div>
-        <div className="profile-button" style={{paddingTop: "10%"}}>
-            <div style={{ marginBottom: "10px", width: "100px" }}>
-              <Button
-                style={buttonStyle}
-                onClick={async () => handleDeleteAccount()}
-              >
-                Delete Account
-              </Button>
-            </div>
-            <div style={{ marginBottom: "10px", width: "auto" }}>
-              <Button
-                style={buttonStyle}
-                onClick={async () => handleChangePassword()}
-              >
-                Change Password
-              </Button>
-            </div>
+        <div className="profile-button" style={{ paddingTop: "10%" }}>
+          <div style={{ marginBottom: "10px", width: "100px" }}>
+            <Button
+              style={buttonStyle}
+              onClick={async () => handleDeleteAccount()}
+            >
+              Delete Account
+            </Button>
           </div>
+          <div style={{ marginBottom: "10px", width: "auto" }}>
+            <Button
+              style={buttonStyle}
+              onClick={async () => handleChangePassword()}
+            >
+              Change Password
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

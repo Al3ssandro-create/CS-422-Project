@@ -39,6 +39,7 @@ export interface db_User_grade{
     semester: string;
     year: number;
     department: string;
+    instructor: string;
     number: number;
     name: string;
 }
