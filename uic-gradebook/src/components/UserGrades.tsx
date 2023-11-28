@@ -25,8 +25,7 @@ function UserGrades({grades }: { grades : Grade[] }) {
             </TableHeader>
             <TableBody emptyContent={"No rows to display."}>
                 {grades.map((grade,index) => (
-                  <TableRow key={index} onClick={() => {
-                    console.log(`/course/${grade.department}/${grade.number}/${grade.instructor}`);
+                  <TableRow style={{cursor:"pointer"}} key={index} onClick={() => {
                     navigate(`/course/${grade.department}/${grade.number}/${grade.instructor}`);
                   }}>
                       <TableCell>{grade.department}</TableCell>
