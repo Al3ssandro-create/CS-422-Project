@@ -63,14 +63,11 @@ function SingleCourse({ course, userGrade, fav, userId }: CourseCardProps) {
       };
 
   
-    const handleStarClick = () => {
-        if (starFilled) {
-            removeFavorite(userId, course.id);
-        } else {
-            addFavorite(userId, course.id);
-        }
+    const handleStarClick = async () => {
+      const ret = starFilled ? await removeFavorite(userId, course.id) : await addFavorite(userId, course.id);
 
-      setStarFilled(!starFilled);
+      if (ret)
+        setStarFilled(!starFilled);
     };
   
     return (

@@ -18,7 +18,8 @@ export const flexRow: CSSProperties = {
   flexDirection: "row", 
   alignItems: "center",
   minHeight: "5vh",
-  backgroundColor: "#9E2D32"
+  backgroundColor: "#9E2D32",
+  zIndex: 100,
 };
 export const stickyFooter: CSSProperties = {
   position: "fixed",

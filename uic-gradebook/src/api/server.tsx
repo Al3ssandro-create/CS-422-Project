@@ -230,7 +230,7 @@ export const getSearchFriends = async (
   };
 };
 
-export const addFriend = async (userId: number, friendId: number) => {
+export const addFriend = async (userId: number, friendId: number): Promise<boolean> => {
   const res = await fetch(`${endpoint}/api/user/${userId}/friends/${friendId}`, {
     method: "POST",
     body: JSON.stringify({
@@ -238,18 +238,24 @@ export const addFriend = async (userId: number, friendId: number) => {
     }),
   });
 
-  console.log(await res.json());
+  if (res.status === 200)
+    return true;
+
+  return false;
 };
 
-export const removeFriend = async (userId: number, friendId: number) => {
+export const removeFriend = async (userId: number, friendId: number): Promise<boolean> => {
   const res = await fetch(`${endpoint}/api/user/${userId}/friends/${friendId}`, {
     method: "DELETE"
   });
 
-  console.log(await res.json());
+  if (res.status === 200)
+    return true;
+
+  return false;
 };
 
-export const acceptFriend = async (userId: number, friendId: number) => {
+export const acceptFriend = async (userId: number, friendId: number): Promise<boolean> => {
   const res = await fetch(`${endpoint}/api/user/${userId}/friends/${friendId}`, {
     method: "PUT",
     body: JSON.stringify({
@@ -257,10 +263,13 @@ export const acceptFriend = async (userId: number, friendId: number) => {
     }),
   });
 
-  console.log(await res.json());
+  if (res.status === 200)
+    return true;
+
+  return false;
 };
 
-export const addFavorite = async (userId: number, courseId: number) => {
+export const addFavorite = async (userId: number, courseId: number): Promise<boolean> => {
   const res = await fetch(
     
     `${endpoint}/api/user/${userId}/fav_courses/${courseId}`,
@@ -269,10 +278,13 @@ export const addFavorite = async (userId: number, courseId: number) => {
     }
   );
 
-  console.log(await res.json());
+  if (res.status === 200)
+    return true;
+
+  return false;
 };
 
-export const removeFavorite = async (userId: number, courseId: number) => {
+export const removeFavorite = async (userId: number, courseId: number): Promise<boolean> => {
   const res = await fetch(
     `${endpoint}/api/user/${userId}/fav_courses/${courseId}`,
     {
@@ -280,7 +292,10 @@ export const removeFavorite = async (userId: number, courseId: number) => {
     }
   );
 
-  console.log(await res.json());
+  if (res.status === 200)
+    return true;
+
+  return false;
 };
 
 // ID for user: User Study
