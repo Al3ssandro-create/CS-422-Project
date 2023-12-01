@@ -1,4 +1,4 @@
-#UIC Grade Distribution Web Application
+# UIC Grade Distribution Web Application
 
 ## Introduction
 
