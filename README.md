@@ -28,21 +28,22 @@ Welcome to the UIC Grade Distribution Web Application! This application enhances
 - Git
 
 ### Clone the Repository
-
-git clone [Repository URL](https://github.com/Al3ssandro-create/CS-422-Project)
-
+```
+git clone https://github.com/Al3ssandro-create/CS-422-Project
+cd CS-422-Project
+```
 ### Running the Server
-
+```
 cd server
 npm install
 node index.js
-
+```
 ### Running the Frontend
-
+```
 cd uic-gradebook
 npm install
 npm run dev
-
+```
 ## Usage
 
 Access the application via `localhost:<port>` after starting both the server and frontend.
