@@ -43,7 +43,7 @@ const ProfilePage = ({ user }: { user: User }) => {
     display: "flex",
     justifyContent: "center",
     paddingTop: "100px",
-    height: "100vw", // to center vertically within the viewport
+    minHeight: "100vh", // to center vertically within the viewport
     width: "100vw", // to cover the entire width of the page
     backgroundColor: "white",
     margin: "0 auto",
