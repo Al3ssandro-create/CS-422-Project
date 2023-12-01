@@ -1,5 +1,5 @@
 # UIC Grade Distribution Web Application
-
+![UIC](Uic.png)
 ## Introduction
 
 Welcome to the UIC Grade Distribution Web Application! This application enhances the accessibility of UIC grade distribution data with intuitive navigation, clear visualization of grade trends, innovative presentation of grade distributions, advanced search, and options to track and share academic achievements.
